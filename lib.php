@@ -1516,7 +1516,7 @@ class format_trail extends format_base {
             return false;
         }
     }
-
+    
     /**
      * Updates format options for a course
      *

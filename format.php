@@ -96,6 +96,16 @@ if ($imagecontaineralignment == 'left') {
 }
 echo 'justify-content: '.$imagecontaineralignment.';';
 echo '} ';
+echo '#check {
+        z-index: 5;
+        position:absolute;
+        top: 0px;
+        right: 0px;
+        width: 32px;
+        height: 32px;
+        background-image:  url("'.$CFG->wwwroot.'/course/format/trail/pix/check.png");
+        background-repeat: no-repeat; 
+    }';
 echo '#trailiconcontainer  ul.impar { position: relative;
     width: 565px;
     height: 200px;

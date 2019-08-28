@@ -706,7 +706,7 @@ class format_trail_renderer extends format_section_renderer_base {
      */
     private function make_block_icon_topics($contextid, $sections, $course, $editing, $hascapvishidsect,
             $urlpicedit) {
-        global $CFG;
+        global $CFG, $USER;
 
         if ($this->settings['newactivity'] == 2) {
             $currentlanguage = current_language();
@@ -926,7 +926,11 @@ class format_trail_renderer extends format_section_renderer_base {
                         $imageclass .= ' inaccessible';
                     }
                     echo html_writer::start_tag('div', array('class' => $imageclass));
-
+                    //codigo jota
+                    if($this->isCheckSection($USER->id,$course->id,$thissection->id)){
+                        echo html_writer::start_tag('div', array('id' => 'check'));
+                        echo html_writer::end_tag('div');
+                    }
                     if ($this->settings['sectiontitleboxposition'] == 1) {
                         echo html_writer::tag('div', $displaysectionname, $sectiontitleattribues);
                     }
@@ -1013,6 +1017,30 @@ class format_trail_renderer extends format_section_renderer_base {
             }
         }
     }
+    
+     /**
+     * Validates the font size that was entered by the user.
+     *
+     * @param string $userid the font size integer to validate.
+     * @param string $courseid the font size integer to validate.
+     * @param string $sectionid the font size integer to validate.
+     * @return true|false
+     */
+     private function isCheckSection($userid, $courseid, $sectionid) {
+        global $DB; // Check section.
+        #echo $userid." # ".$courseid." # ".$sectionid;
+        #echo '<br/>';
+        #echo "SELECT COUNT(c.id) AS countrecord FROM {course_modules_completion} c INNER JOIN {course_modules} m ON c.coursemoduleid = m.id WHERE c.userid=".$userid." AND m.course==".$courseid." AND m.section==".$sectionid." AND m.completion > 0 AND c.completionstate > 0";
+        $count_atv_ok = $DB->get_record_sql("SELECT COUNT(c.id) AS total FROM {course_modules_completion} c INNER JOIN {course_modules} m ON c.coursemoduleid = m.id WHERE c.userid=".$userid." AND m.course=".$courseid." AND m.section=".$sectionid." AND m.completion > 0 AND c.completionstate > 0");
+        //echo 'TOTAL OK:'.$count_atv_ok->total;
+        $count_atv = $DB->get_record_sql("SELECT COUNT(id) AS total FROM {course_modules} WHERE course=".$courseid." AND section=".$sectionid." AND completion > 0");
+        //echo '<br/>';
+        //echo 'TOTAL:'.$count_atv->total;
+        if($count_atv_ok->total==$count_atv->total && $count_atv->total!=0){
+            return true;
+        }
+        return false;
+     }
 
     private function make_block_icon_topics_editing($thissection, $contextid, $urlpicedit) {
         global $USER;
