@@ -145,7 +145,7 @@ $string['setcurrentselectedsectioncolour'] = 'Defina a cor atual da seção sele
 $string['setcurrentselectedsectioncolour_help'] = 'Defina a cor atual da seção selecionada em RGB hexadecimal.';
 $string['setcurrentselectedimagecontainertextcolour'] = 'Defina a cor do texto do container de imagens atual selecionado';
 $string['setcurrentselectedimagecontainertextcolour_help'] = 'Defina a cor do texto do container de imagem atual em RGB hexadecimal.';
-$string['setcurrentselectedimagecontainercolour'] = 'Defina a cor atual do container da imagem selecionada';
+$string['setcurrentselectedimagecontainercolour'] = 'Defina a cor atual do container da imagem selecionada. (999999 para transparente)';
 $string['setcurrentselectedimagecontainercolour_help'] = 'Defina a cor atual do container de imagem selecionado em RGB hexadecimal.';
 
 $string['setnewactivity'] = 'Mostrar nova imagem de notificação de atividade';
@@ -234,6 +234,20 @@ $string['bottom'] = 'Base';
 $string['centre'] = 'Centro';
 $string['left'] = 'Esquerda';
 $string['right'] = 'Direita';
+
+//tipos fundo
+$string['tipo_pista'] = 'Pista';
+$string['tipo_rio'] = 'Rio';
+$string['tipo_quebra1'] = 'Quebra-cabeças 1';
+$string['tipo_quebra2'] = 'Quebra-cabeças 2';
+$string['defaultsetshowbackground'] = 'Estilo da trilha';
+$string['setshowbackground'] = 'Estilo da Trilha';
+$string['setshowbackground_help'] = 'Escolha o fundo da Trilha';
+//tipos de check
+$string['check'] = 'Check';
+$string['star'] = 'Estrela';
+$string['setshowcheckstar'] = 'Estilo do check';
+$string['setshowcheckstar_help'] = 'Escolha o estilo de check que aparecerá quando o aluno concluir todas as atividades com critérios de conclusão da seção.';
 
 // Reset.
 $string['resetgrp'] = 'Resetar:';

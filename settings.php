@@ -339,4 +339,15 @@ if ($ADMIN->fulltree) {
         2 => new lang_string('yes')   // Yes.
     );
     $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
+    
+    /* Show style background. */
+    $name = 'format_trail/defaultsetshowbackground';
+    $title = get_string('defaultsetshowbackground', 'format_trail');
+    $description = get_string('defaultsetshowbackground', 'format_trail');
+    $default = format_trail::get_default_set_show_background();
+    $choices = array(
+        1 => new lang_string('tipo_pista', 'format_trail'),
+        2 => new lang_string('tipo_rio', 'format_trail')
+    );
+    $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 }

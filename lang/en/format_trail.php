@@ -145,8 +145,8 @@ $string['setcurrentselectedsectioncolour'] = 'Set the current selected section c
 $string['setcurrentselectedsectioncolour_help'] = 'Set the current selected section colour in hexidecimal RGB.';
 $string['setcurrentselectedimagecontainertextcolour'] = 'Set the current selected image container text colour';
 $string['setcurrentselectedimagecontainertextcolour_help'] = 'Set the current selected image container text colour in hexidecimal RGB.';
-$string['setcurrentselectedimagecontainercolour'] = 'Set the current selected image container colour';
-$string['setcurrentselectedimagecontainercolour_help'] = 'Set the current selected image container colour in hexidecimal RGB.';
+$string['setcurrentselectedimagecontainercolour'] = 'Set the current selected image container colour (999999 for transparent)';
+$string['setcurrentselectedimagecontainercolour_help'] = 'Set the current selected image container colour in hexidecimal RGB. (999999 for transparent)';
 
 $string['setnewactivity'] = 'Show new activity notification image';
 $string['setnewactivity_help'] = "Show the new activity notification image when a new activity or resource are added to a section.";
@@ -234,6 +234,20 @@ $string['bottom'] = 'Bottom';
 $string['centre'] = 'Centre';
 $string['left'] = 'Left';
 $string['right'] = 'Right';
+//tipos fundo
+$string['tipo_pista'] = 'Track';
+$string['tipo_rio'] = 'River';
+$string['tipo_quebra1'] = 'Puzzle 1';
+$string['tipo_quebra2'] = 'Puzzle 2';
+$string['defaultsetshowbackground'] = 'Defaul style trail';
+$string['setshowbackground'] = 'Style Trail';
+$string['setshowbackground_help'] = 'Choose the track background';
+
+//tipos de check
+$string['check'] = 'Check';
+$string['star'] = 'Star';
+$string['setshowcheckstar'] = 'Check style';
+$string['setshowcheckstar_help'] = 'Choose the check style that will appear when the student completes all activities with section completion criteria.';
 
 // Reset.
 $string['resetgrp'] = 'Reset:';

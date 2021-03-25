@@ -339,6 +339,14 @@ class format_trail extends format_base {
     }
 
     /**
+     * Gets the default set show section title summary position.
+     * @return int Default default set show section title summary position.
+     */
+    public static function get_default_set_show_background() {
+        return 1; // Top.
+    }
+    
+    /**
      * Gets the default section title summary max length.
      * @return int Default default section title summary max length.
      */
@@ -579,6 +587,14 @@ class format_trail extends format_base {
                     'default' => $courseconfig->coursedisplay,
                     'type' => PARAM_INT
                 ),
+                'showbackground' => array(
+                    'default' => get_config('format_trail', 'defaultsetshowbackground'),
+                    'type' => PARAM_ALPHANUM
+                ),
+                'showcheckstar' => array(
+                    'default' => get_config('format_trail', 'defaultsetshowcheckstar'),
+                    'type' => PARAM_ALPHANUM
+                ),
                 'imagecontaineralignment' => array(
                     'default' => get_config('format_trail', 'defaultimagecontaineralignment'),
                     'type' => PARAM_ALPHANUM
@@ -750,6 +766,7 @@ class format_trail extends format_base {
                     'help_component' => 'moodle',
                 )
             );
+            
             if (has_capability('format/trail:changeimagecontaineralignment', $context)) {
                 $courseformatoptionsedit['imagecontaineralignment'] = array(
                     'label' => new lang_string('setimagecontaineralignment', 'format_trail'),
@@ -1112,6 +1129,34 @@ class format_trail extends format_base {
                     )
                 )
             );
+            
+            //Alterado por JOTA
+            $courseformatoptionsedit['showbackground'] = array(
+                    'label' => new lang_string('setshowbackground', 'format_trail'),
+                    'element_type' => 'select',
+                    'element_attributes' => array(
+                        array(
+                            1 => new lang_string('tipo_pista', 'format_trail'),
+                            2 => new lang_string('tipo_rio', 'format_trail'),
+                            3 => new lang_string('tipo_quebra1', 'format_trail'),
+                            4 => new lang_string('tipo_quebra2', 'format_trail')
+                        )
+                    ),
+                    'help' => 'setshowbackground',
+                    'help_component' => 'format_trail'
+                );
+            $courseformatoptionsedit['showcheckstar'] = array(
+                    'label' => new lang_string('setshowcheckstar', 'format_trail'),
+                    'element_type' => 'select',
+                    'element_attributes' => array(
+                        array(
+                            1 => new lang_string('check', 'format_trail'),
+                            2 => new lang_string('star', 'format_trail')
+                        )
+                    ),
+                    'help' => 'setshowcheckstar',
+                    'help_component' => 'format_trail'
+                );
 
             if (has_capability('format/trail:changeimagecontainernavigation', $context)) {
                 $courseformatoptionsedit['setsection0ownpagenotrailonesection'] = array(
@@ -2293,13 +2338,19 @@ class format_trail extends format_base {
         return $sectionimage;  // So that the caller can know the new value of displayedimageindex.
     }
 
-    public function output_section_image($section, $sectionname, $sectionimage, $contextid, $thissection, $trailimagepath, $output) {
+    //alteração Jota
+    public function output_section_image($section, $sectionname, $sectionimage, $contextid, $thissection, $trailimagepath, $output, $bloqueado=0) {
+        global $CFG;
         $content = '';
         if (is_object($sectionimage) && ($sectionimage->displayedimageindex > 0)) {
             $imgurl = moodle_url::make_pluginfile_url(
-                $contextid, 'course', 'section', $thissection->id, $trailimagepath,
-                $sectionimage->displayedimageindex . '_' . $sectionimage->image
-            );
+                    $contextid, 'course', 'section', $thissection->id, $trailimagepath,
+                    $sectionimage->displayedimageindex . '_' . $sectionimage->image
+                );
+            //alterado aqui
+            if($bloqueado > 0) {
+                $imgurl = $CFG->wwwroot . '/course/format/trail/pix/lock.png';
+            }
             $content = html_writer::empty_tag('img', array(
                 'src' => $imgurl,
                 'alt' => $sectionname,
@@ -2307,6 +2358,10 @@ class format_trail extends format_base {
                 'aria-label' => $sectionname));
         } else if ($section == 0) {
             $imgurl = $output->image_url('info', 'format_trail');
+            //alterado aqui
+            if($bloqueado > 0) {
+                $imgurl = $CFG->wwwroot . '/course/format/trail/pix/lock.png';
+            }
             $content = html_writer::empty_tag('img', array(
                 'src' => $imgurl,
                 'alt' => $sectionname,

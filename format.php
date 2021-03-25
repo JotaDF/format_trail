@@ -1,4 +1,5 @@
 <?php
+
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -79,14 +80,14 @@ $renderer->set_portable($portable);
 
 $gfsettings = $courseformat->get_settings();
 $imageproperties = $courseformat->calculate_image_container_properties(
-$gfsettings['imagecontainerwidth'], $gfsettings['imagecontainerratio'], $gfsettings['borderwidth']);
+        $gfsettings['imagecontainerwidth'], $gfsettings['imagecontainerratio'], $gfsettings['borderwidth']);
 
 echo '<style type="text/css" media="screen">';
 echo '/* <![CDATA[ */';
 echo ' #trailiconcontainer  ul.trailicons { position: relative;
     width: 565px;
     height: 200px;
-    background-image:  url("'.$CFG->wwwroot.'/course/format/trail/pix/trilha_topo.png");
+    background-image:  url("' . $CFG->wwwroot . '/course/format/trail/pix/trilha'.$gfsettings['showbackground'].'_topo.png");
     background-repeat: no-repeat; ';
 $imagecontaineralignment = $gfsettings['imagecontaineralignment'];
 if ($imagecontaineralignment == 'left') {
@@ -94,7 +95,7 @@ if ($imagecontaineralignment == 'left') {
 } else if ($imagecontaineralignment == 'right') {
     $imagecontaineralignment = 'flex-end';
 }
-echo 'justify-content: '.$imagecontaineralignment.';';
+echo 'justify-content: ' . $imagecontaineralignment . ';';
 echo '} ';
 echo '#check {
         z-index: 5;
@@ -103,22 +104,32 @@ echo '#check {
         right: 0px;
         width: 32px;
         height: 32px;
-        background-image:  url("'.$CFG->wwwroot.'/course/format/trail/pix/check.png");
+        background-image:  url("' . $CFG->wwwroot . '/course/format/trail/pix/check.png");
+        background-repeat: no-repeat; 
+    }';
+echo '#star {
+        z-index: 5;
+        position:absolute;
+        top: 0px;
+        right: 0px;
+        width: 32px;
+        height: 32px;
+        background-image:  url("' . $CFG->wwwroot . '/course/format/trail/pix/star.png");
         background-repeat: no-repeat; 
     }';
 echo '#trailiconcontainer  ul.impar { position: relative;
     width: 565px;
     height: 200px;
-    background-image:  url("'.$CFG->wwwroot.'/course/format/trail/pix/trilha_meio_impar.png");
+    background-image:  url("' . $CFG->wwwroot . '/course/format/trail/pix/trilha'.$gfsettings['showbackground'].'_meio_impar.png");
     background-repeat: no-repeat; ';
-echo 'justify-content: '.$imagecontaineralignment.';';
+echo 'justify-content: ' . $imagecontaineralignment . ';';
 echo '} ';
 echo '#trailiconcontainer  ul.par { position: relative;
     width: 565px;
     height: 200px;
-    background-image:  url("'.$CFG->wwwroot.'/course/format/trail/pix/trilha_meio_par.png");
+    background-image:  url("' . $CFG->wwwroot . '/course/format/trail/pix/trilha'.$gfsettings['showbackground'].'_meio_par.png");
     background-repeat: no-repeat; ';
-echo 'justify-content: '.$imagecontaineralignment.';';
+echo 'justify-content: ' . $imagecontaineralignment . ';';
 echo '}';
 echo '#trailiconcontainer ul.trailicons li {
 	padding: 0px;
@@ -126,44 +137,44 @@ echo '#trailiconcontainer ul.trailicons li {
      }';
 echo '.course-content ul.trailicons li .icon_content {';
 if ($gfsettings['sectiontitlefontsize']) { // Font size is set.
-    echo 'font-size: '.$gfsettings['sectiontitlefontsize'].'px;';
+    echo 'font-size: ' . $gfsettings['sectiontitlefontsize'] . 'px;';
     if (($gfsettings['sectiontitlefontsize'] + 4) > 20) {
-        echo 'height: '.($gfsettings['sectiontitlefontsize'] + 4).'px;';
+        echo 'height: ' . ($gfsettings['sectiontitlefontsize'] + 4) . 'px;';
     }
 }
-echo 'text-align: '.$gfsettings['sectiontitlealignment'].';';
+echo 'text-align: ' . $gfsettings['sectiontitlealignment'] . ';';
 if ($gfsettings['sectiontitleboxposition'] == 1) { // Inside.
-    echo 'width: '.($gfsettings['imagecontainerwidth'] - 20).'px;'; // '20' is the total '.icon_content.content_inside' padding.
+    echo 'width: ' . ($gfsettings['imagecontainerwidth'] - 20) . 'px;'; // '20' is the total '.icon_content.content_inside' padding.
 } else {
-    echo 'width: '.($gfsettings['imagecontainerwidth'] + ($gfsettings['borderwidth'] * 2)).'px;';
+    echo 'width: ' . ($gfsettings['imagecontainerwidth'] + ($gfsettings['borderwidth'] * 2)) . 'px;';
 }
 echo '}';
 echo '.course-content ul.trailicons li .image_holder {';
-echo 'width: '.$gfsettings['imagecontainerwidth'].'px;';
-echo 'height: '.$imageproperties['height'].'px;';
+echo 'width: ' . $gfsettings['imagecontainerwidth'] . 'px;';
+echo 'height: ' . $imageproperties['height'] . 'px;';
 echo 'border-color: ';
 if ($gfsettings['bordercolour'][0] != '#') {
     echo '#';
 }
-echo $gfsettings['bordercolour'].';';
+echo $gfsettings['bordercolour'] . ';';
 
-if($gfsettings['imagecontainerbackgroundcolour'] == '999999' || $gfsettings['imagecontainerbackgroundcolour'] == '#999999' ){
+if ($gfsettings['imagecontainerbackgroundcolour'] == '999999' || $gfsettings['imagecontainerbackgroundcolour'] == '#999999') {
     
-}else{
+} else {
     echo 'background-color: ';
     if ($gfsettings['imagecontainerbackgroundcolour'][0] != '#') {
         echo '#';
     }
-    echo $gfsettings['imagecontainerbackgroundcolour'].';';
+    echo $gfsettings['imagecontainerbackgroundcolour'] . ';';
 }
 
-echo 'border-width: '.$gfsettings['borderwidth'];
+echo 'border-width: ' . $gfsettings['borderwidth'];
 if ($gfsettings['borderwidth']) {
     echo 'px';
 }
 echo ';';
 if ($gfsettings['borderradius'] == 2) { // On.
-    echo 'border-radius: '.$gfsettings['borderwidth'];
+    echo 'border-radius: ' . $gfsettings['borderwidth'];
     if ($gfsettings['borderwidth']) {
         echo 'px';
     }
@@ -180,11 +191,11 @@ $green = hexdec(substr($gfsettings['bordercolour'], $startindex + 2, 2));
 $blue = hexdec(substr($gfsettings['bordercolour'], $startindex + 4, 2));
 
 echo '.course-content ul.trailicons li:hover .image_holder {';
-echo 'box-shadow: 0 0 0 '.$gfsettings['borderwidth'];
+echo 'box-shadow: 0 0 0 ' . $gfsettings['borderwidth'];
 if ($gfsettings['borderwidth']) {
     echo 'px';
 }
-echo ' rgba('.$red.','.$green.','.$blue.', 0.3);';
+echo ' rgba(' . $red . ',' . $green . ',' . $blue . ', 0.3);';
 echo '}';
 
 echo '.course-content ul.trailicons li.currenticon .image_holder {';
@@ -192,29 +203,32 @@ echo 'box-shadow: 0 0 2px 4px ';
 if ($gfsettings['currentselectedsectioncolour'][0] != '#') {
     echo '#';
 }
-echo $gfsettings['currentselectedsectioncolour'].';';
+echo $gfsettings['currentselectedsectioncolour'] . ';';
 echo '}';
 
 echo '.course-content ul.trailicons li.currentselected {';
-echo 'background-color: ';
-if ($gfsettings['currentselectedimagecontainercolour'][0] != '#') {
-    echo '#';
+if ($gfsettings['currentselectedimagecontainercolour'] == '999999' || $gfsettings['currentselectedimagecontainercolour'] == '#999999') {
+    echo 'background-color: rgba(12,11,44,0.2); border-radius: 15px;}';
+} else {
+    echo 'background-color: ';
+    if ($gfsettings['currentselectedimagecontainercolour'][0] != '#') {
+        echo '#';
+    }
+    echo $gfsettings['currentselectedimagecontainercolour'] . ';';
+    echo '}';
 }
-echo $gfsettings['currentselectedimagecontainercolour'].';';
-echo '}';
-
 if ($gfsettings['sectiontitleboxposition'] == 1) { // Inside.
     echo '.course-content ul.trailicons li .icon_content.content_inside {';
     echo 'background-color: ';
     if ($gfsettings['sectiontitleinsidetitlebackgroundcolour'][0] != '#') {
         echo '#';
     }
-    echo $gfsettings['sectiontitleinsidetitlebackgroundcolour'].';';
+    echo $gfsettings['sectiontitleinsidetitlebackgroundcolour'] . ';';
     echo 'color: ';
     if ($gfsettings['sectiontitleinsidetitletextcolour'][0] != '#') {
         echo '#';
     }
-    echo $gfsettings['sectiontitleinsidetitletextcolour'].';';
+    echo $gfsettings['sectiontitleinsidetitletextcolour'] . ';';
     echo 'height: ';
     if ($gfsettings['sectiontitleboxheight'] == 0) {
         echo round(($imageproperties['height'] * 0.25), 0, PHP_ROUND_HALF_UP);
@@ -222,7 +236,7 @@ if ($gfsettings['sectiontitleboxposition'] == 1) { // Inside.
         echo $gfsettings['sectiontitleboxheight'];
     }
     echo 'px;';
-    echo 'opacity: '.$gfsettings['sectiontitleboxopacity'].';';
+    echo 'opacity: ' . $gfsettings['sectiontitleboxopacity'] . ';';
     echo '}';
 } else {
     echo '.course-content ul.trailicons li.currentselected .icon_content {';
@@ -230,7 +244,7 @@ if ($gfsettings['sectiontitleboxposition'] == 1) { // Inside.
     if ($gfsettings['currentselectedimagecontainertextcolour'][0] != '#') {
         echo '#';
     }
-    echo $gfsettings['currentselectedimagecontainertextcolour'].';';
+    echo $gfsettings['currentselectedimagecontainertextcolour'] . ';';
     echo '}';
 }
 
@@ -239,47 +253,47 @@ echo 'background-color: ';
 if ($gfsettings['sectiontitlesummarybackgroundcolour'][0] != '#') {
     echo '#';
 }
-echo $gfsettings['sectiontitlesummarybackgroundcolour'].';';
+echo $gfsettings['sectiontitlesummarybackgroundcolour'] . ';';
 echo 'color: ';
 if ($gfsettings['sectiontitlesummarytextcolour'][0] != '#') {
     echo '#';
 }
-echo $gfsettings['sectiontitlesummarytextcolour'].';';
+echo $gfsettings['sectiontitlesummarytextcolour'] . ';';
 echo '}';
 
 $tooltiparrowposition = $courseformat->get_set_show_section_title_summary_position();
-echo '.course-content ul.trailicons li .trailicon_link .tooltip.'.$tooltiparrowposition.' .tooltip-arrow {';
-echo 'border-'.$tooltiparrowposition.'-color: ';
+echo '.course-content ul.trailicons li .trailicon_link .tooltip.' . $tooltiparrowposition . ' .tooltip-arrow {';
+echo 'border-' . $tooltiparrowposition . '-color: ';
 if ($gfsettings['sectiontitlesummarybackgroundcolour'][0] != '#') {
     echo '#';
 }
-echo $gfsettings['sectiontitlesummarybackgroundcolour'].';';
+echo $gfsettings['sectiontitlesummarybackgroundcolour'] . ';';
 echo '}';
 
 echo '.course-content ul.trailicons li .trailicon_link .image_holder .tooltip {';
-echo 'opacity: '.$gfsettings['sectiontitlesummarybackgroundopacity'].';';
+echo 'opacity: ' . $gfsettings['sectiontitlesummarybackgroundopacity'] . ';';
 echo '}';
 
 echo '.course-content ul.trailicons img.new_activity {';
-echo 'margin-top: '.$imageproperties['margin-top'].'px;';
-echo 'margin-left: '.$imageproperties['margin-left'].'px;';
+echo 'margin-top: ' . $imageproperties['margin-top'] . 'px;';
+echo 'margin-left: ' . $imageproperties['margin-left'] . 'px;';
 echo '}';
 
 echo ' @media (max-width: 480px) {';
 echo ' #trailiconcontainer  ul.trailicons { position: relative;
     width: 250px;
     height: auto;
-    background-image:  url("'.$CFG->wwwroot.'/course/format/trail/pix/trilha_meio_m.png");
+    background-image:  url("' . $CFG->wwwroot . '/course/format/trail/pix/trilha'.$gfsettings['showbackground'].'_topo_m.png");
     background-repeat: repeat-y; }';
 echo '#trailiconcontainer  ul.par { position: relative;
     width: 250px;
     height: auto;
-    background-image:  url("'.$CFG->wwwroot.'/course/format/trail/pix/trilha_meio_m.png");
+    background-image:  url("' . $CFG->wwwroot . '/course/format/trail/pix/trilha'.$gfsettings['showbackground'].'_meio_m.png");
     background-repeat: repeat-y; }';
 echo '#trailiconcontainer  ul.impar { position: relative;
     width: 250px;
     height: auto;
-    background-image:  url("'.$CFG->wwwroot.'/course/format/trail/pix/trilha_meio_m.png");
+    background-image:  url("' . $CFG->wwwroot . '/course/format/trail/pix/trilha'.$gfsettings['showbackground'].'_meio_m.png");
     background-repeat: repeat-y; }';
 echo '}';
 echo '/* ]]> */';
@@ -287,7 +301,7 @@ echo '</style>';
 
 if ($sectionid) {
     /* The section id has been specified so use the value of $displaysection as that
-       will be set to the actual section number. */
+      will be set to the actual section number. */
     $sectionparam = $displaysection;
 } else {
     $sectionparam = optional_param('section', -1, PARAM_INT);

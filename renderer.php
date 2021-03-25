@@ -241,7 +241,7 @@ class format_trail_renderer extends format_section_renderer_base {
         $o .= $this->format_summary_text($section);
         $o .= html_writer::end_tag('div');
 
-        $o .= $this->section_availability($section);
+        $o .=  $this->section_availability($section);
 
         return $o;
     }
@@ -707,17 +707,20 @@ class format_trail_renderer extends format_section_renderer_base {
     private function make_block_icon_topics($contextid, $sections, $course, $editing, $hascapvishidsect,
             $urlpicedit) {
         global $CFG, $USER;
+        
+        $coursecontext = context_course::instance($course->id);
 
-        if ($this->settings['newactivity'] == 2) {
-            $currentlanguage = current_language();
-            if (!file_exists("$CFG->dirroot/course/format/trail/pix/new_activity_".$currentlanguage.".png")) {
-                $currentlanguage = 'en';
-            }
-            $urlpicnewactivity = $this->output->image_url('new_activity_'.$currentlanguage, 'format_trail');
-
-            // Get all the section information about which items should be marked with the NEW picture.
-            $sectionupdated = $this->new_activity($course);
-        }
+        // Comentado por Jota
+//        if ($this->settings['newactivity'] == 2) {
+//            $currentlanguage = current_language();
+//            if (!file_exists("$CFG->dirroot/course/format/trail/pix/new_activity_".$currentlanguage.".png")) {
+//                $currentlanguage = 'en';
+//            }
+//            $urlpicnewactivity = $this->output->image_url('new_activity_'.$currentlanguage, 'format_trail');
+//
+//            // Get all the section information about which items should be marked with the NEW picture.
+//            $sectionupdated = $this->new_activity($course);
+//        }
 
         // Get the section images for the course.
         $sectionimages = $this->courseformat->get_images($course->id);
@@ -928,9 +931,14 @@ class format_trail_renderer extends format_section_renderer_base {
                     echo html_writer::start_tag('div', array('class' => $imageclass));
                     //codigo jota
                     if($this->isCheckSection($USER->id,$course->id,$thissection->id)){
-                        echo html_writer::start_tag('div', array('id' => 'check'));
+                        $class_check = 'check';
+                        if ($this->settings['showcheckstar'] == 2) {
+                           $class_check = 'star';
+                        }
+                        echo html_writer::start_tag('div', array('id' => $class_check));
                         echo html_writer::end_tag('div');
                     }
+                    
                     if ($this->settings['sectiontitleboxposition'] == 1) {
                         echo html_writer::tag('div', $displaysectionname, $sectiontitleattribues);
                     }
@@ -939,9 +947,12 @@ class format_trail_renderer extends format_section_renderer_base {
                         echo html_writer::tag('div', '', array('id' => 'trailsectionsummary-'.$thissection->section,
                             'hidden' => true, 'aria-label' => $summary));
                     }
-
+                    // Alteração Jota
+                    $bloqueado = $this->get_section_availability_bloqueado($thissection, has_capability('moodle/course:viewhiddensections',
+                        $coursecontext));
+                    //echo '###' . $bloqueado . '###';
                     echo $this->courseformat->output_section_image(
-                        $section, $sectionname, $sectionimage, $contextid, $thissection, $trailimagepath, $this->output);
+                        $section, $sectionname, $sectionimage, $contextid, $thissection, $trailimagepath, $this->output, $bloqueado);
 
                     echo html_writer::end_tag('div');
                     echo html_writer::end_tag('a');
@@ -1031,10 +1042,12 @@ class format_trail_renderer extends format_section_renderer_base {
         #echo $userid." # ".$courseid." # ".$sectionid;
         #echo '<br/>';
         #echo "SELECT COUNT(c.id) AS countrecord FROM {course_modules_completion} c INNER JOIN {course_modules} m ON c.coursemoduleid = m.id WHERE c.userid=".$userid." AND m.course==".$courseid." AND m.section==".$sectionid." AND m.completion > 0 AND c.completionstate > 0";
-        $count_atv_ok = $DB->get_record_sql("SELECT COUNT(c.id) AS total FROM {course_modules_completion} c INNER JOIN {course_modules} m ON c.coursemoduleid = m.id WHERE c.userid=".$userid." AND m.course=".$courseid." AND m.section=".$sectionid." AND m.completion > 0 AND c.completionstate > 0");
+        $count_atv_ok = $DB->get_record_sql("SELECT COUNT(c.id) AS total FROM {course_modules_completion} c INNER JOIN {course_modules} m ON c.coursemoduleid = m.id WHERE c.userid=".$userid." AND m.course=".$courseid." AND m.section=".$sectionid." AND m.completion > 0 AND c.completionstate > 0 AND m.deletioninprogress = 0");
+        //echo 'SQL: '."SELECT COUNT(c.id) AS total FROM {course_modules_completion} c INNER JOIN {course_modules} m ON c.coursemoduleid = m.id WHERE c.userid=".$userid." AND m.course=".$courseid." AND m.section=".$sectionid." AND m.completion > 0 AND c.completionstate > 0";
         //echo 'TOTAL OK:'.$count_atv_ok->total;
-        $count_atv = $DB->get_record_sql("SELECT COUNT(id) AS total FROM {course_modules} WHERE course=".$courseid." AND section=".$sectionid." AND completion > 0");
+        $count_atv = $DB->get_record_sql("SELECT COUNT(id) AS total FROM {course_modules} WHERE course=".$courseid." AND section=".$sectionid." AND completion > 0 AND deletioninprogress = 0");
         //echo '<br/>';
+        //echo 'SQL2: ' . "SELECT COUNT(id) AS total FROM {course_modules} WHERE course=".$courseid." AND section=".$sectionid." AND completion > 0";
         //echo 'TOTAL:'.$count_atv->total;
         if($count_atv_ok->total==$count_atv->total && $count_atv->total!=0){
             return true;
@@ -1309,4 +1322,84 @@ class format_trail_renderer extends format_section_renderer_base {
     public function set_initialsection($initialsection) {
         $this->initialsection = $initialsection;
     }
+    
+     /**
+     * If section is not visible, display the message about that ('Not available
+     * until...', that sort of thing). Otherwise, returns blank.
+     *
+     * For users with the ability to view hidden sections, it shows the
+     * information even though you can view the section and also may include
+     * slightly fuller information (so that teachers can tell when sections
+     * are going to be unavailable etc). This logic is the same as for
+     * activities.
+     *
+     * @param section_info $section The course_section entry from DB
+     * @param bool $canviewhidden True if user can view hidden sections
+     * @return string HTML to output
+     */
+    protected function section_availability_message($section, $canviewhidden) {
+        global $CFG;
+        $o = '';
+        if (!$section->visible) {
+            if ($canviewhidden) {
+                $o .= $this->courserenderer->availability_info(get_string('hiddenfromstudents'), 'ishidden');
+            } else {
+                // We are here because of the setting "Hidden sections are shown in collapsed form".
+                // Student can not see the section contents but can see its name.
+                $o .= $this->courserenderer->availability_info(get_string('notavailable'), 'ishidden');
+            }
+        } else if (!$section->uservisible) {
+            if ($section->availableinfo) {
+                // Note: We only get to this function if availableinfo is non-empty,
+                // so there is definitely something to print.
+                $formattedinfo = \core_availability\info::format_info(
+                        $section->availableinfo, $section->course);
+                $o .= $this->courserenderer->availability_info($formattedinfo, 'isrestricted');
+            }
+        } else if ($canviewhidden && !empty($CFG->enableavailability)) {
+            // Check if there is an availability restriction.
+            $ci = new \core_availability\info_section($section);
+            $fullinfo = $ci->get_full_information();
+            if ($fullinfo) {
+                $formattedinfo = \core_availability\info::format_info(
+                        $fullinfo, $section->course);
+                $o .= $this->courserenderer->availability_info($formattedinfo, 'isrestricted isfullinfo');
+            }
+        }
+        return $o;
+    }
+    
+     /**
+     * If section is not visible, display the message about that ('Not available
+     * until...', that sort of thing). Otherwise, returns blank.
+     *
+     * For users with the ability to view hidden sections, it shows the
+     * information even though you can view the section and also may include
+     * slightly fuller information (so that teachers can tell when sections
+     * are going to be unavailable etc). This logic is the same as for
+     * activities.
+     *
+     * @param section_info $section The course_section entry from DB
+     * @param bool $canviewhidden True if user can view hidden sections
+     * @return string HTML to output
+     */
+    protected function get_section_availability_bloqueado($section, $canviewhidden) {
+        global $CFG;
+        $o = 0;
+        if (!$section->uservisible) {
+            if ($section->availableinfo) {
+                $o = 1;
+            }
+        } else if ($canviewhidden && !empty($CFG->enableavailability)) {
+            // Check if there is an availability restriction.
+            $ci = new \core_availability\info_section($section);
+            $fullinfo = $ci->get_full_information();
+            if ($fullinfo) {
+                $o = 1;
+            }
+        }
+        return $o;
+    }
+
+
 }
