@@ -244,8 +244,10 @@ $string['defaultsetshowbackground'] = 'Estilo da trilha';
 $string['setshowbackground'] = 'Estilo da Trilha';
 $string['setshowbackground_help'] = 'Escolha o fundo da Trilha';
 //tipos de check
+$string['none'] = 'Nenhum';
 $string['check'] = 'Check';
 $string['star'] = 'Estrela';
+$string['like'] = 'Joínha';
 $string['setshowcheckstar'] = 'Estilo do check';
 $string['setshowcheckstar_help'] = 'Escolha o estilo de check que aparecerá quando o aluno concluir todas as atividades com critérios de conclusão da seção.';
 

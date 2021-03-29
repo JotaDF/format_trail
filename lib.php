@@ -1150,8 +1150,10 @@ class format_trail extends format_base {
                     'element_type' => 'select',
                     'element_attributes' => array(
                         array(
-                            1 => new lang_string('check', 'format_trail'),
-                            2 => new lang_string('star', 'format_trail')
+                            1 => new lang_string('none', 'format_trail'),
+                            2 => new lang_string('check', 'format_trail'),
+                            3 => new lang_string('star', 'format_trail'),
+                            4 => new lang_string('like', 'format_trail')
                         )
                     ),
                     'help' => 'setshowcheckstar',

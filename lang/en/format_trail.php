@@ -244,8 +244,10 @@ $string['setshowbackground'] = 'Style Trail';
 $string['setshowbackground_help'] = 'Choose the track background';
 
 //tipos de check
+$string['none'] = 'None';
 $string['check'] = 'Check';
 $string['star'] = 'Star';
+$string['like'] = 'Like';
 $string['setshowcheckstar'] = 'Check style';
 $string['setshowcheckstar_help'] = 'Choose the check style that will appear when the student completes all activities with section completion criteria.';
 

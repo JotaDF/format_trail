@@ -931,9 +931,15 @@ class format_trail_renderer extends format_section_renderer_base {
                     echo html_writer::start_tag('div', array('class' => $imageclass));
                     //codigo jota
                     if($this->isCheckSection($USER->id,$course->id,$thissection->id)){
-                        $class_check = 'check';
+                        $class_check = '';
                         if ($this->settings['showcheckstar'] == 2) {
+                           $class_check = 'check';
+                        }
+                        if ($this->settings['showcheckstar'] == 3) {
                            $class_check = 'star';
+                        }
+                        if ($this->settings['showcheckstar'] == 4) {
+                           $class_check = 'like';
                         }
                         echo html_writer::start_tag('div', array('id' => $class_check));
                         echo html_writer::end_tag('div');

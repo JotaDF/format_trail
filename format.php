@@ -117,6 +117,16 @@ echo '#star {
         background-image:  url("' . $CFG->wwwroot . '/course/format/trail/pix/star.png");
         background-repeat: no-repeat; 
     }';
+echo '#like {
+        z-index: 5;
+        position:absolute;
+        top: 0px;
+        right: 0px;
+        width: 32px;
+        height: 32px;
+        background-image:  url("' . $CFG->wwwroot . '/course/format/trail/pix/like.png");
+        background-repeat: no-repeat; 
+    }';
 echo '#trailiconcontainer  ul.impar { position: relative;
     width: 565px;
     height: 200px;
