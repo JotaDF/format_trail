@@ -17,10 +17,9 @@
 /**
  * Trail Format - A topics based format that uses a trail of user selectable images to popup a light box of the section.
  *
- * @package    course/format
- * @subpackage trail
- * @version    See the value of '$plugin->version' in version.php.
- * @copyright  &copy; 2012 G J Barnard in respect to modifications of standard topics format.
+ * @package    format_trail
+ * @copyright  &copy; 2019 Jose Wilson  in respect to modifications of grid format.
+ * @author     &copy; 2012 G J Barnard in respect to modifications of standard topics format.
  * @author     G J Barnard - {@link http://about.me/gjbarnard} and
  *                           {@link http://moodle.org/user/profile.php?id=442195}
  * @author     Based on code originally written by Paul Krix and Julian Ridden.
@@ -128,9 +127,9 @@ $string['defaultnewactivity_desc'] = "Show the new activity notification image w
 $string['setimagecontaineralignment'] = 'Set the image container alignment';
 $string['setimagecontaineralignment_help'] = 'Set the image container width to one of: Left, Centre or Right';
 $string['setimagecontainerwidth'] = 'Set the image container width';
-$string['setimagecontainerwidth_help'] = 'Set the image container width to one of: 128, 192, 210, 256, 320, 384, 448, 512, 576, 640, 704 or 768';
+$string['setimagecontainerwidth_help'] = 'Set the image container width to one of: 128, 192 or 210';
 $string['setimagecontainerratio'] = 'Set the image container ratio relative to the width';
-$string['setimagecontainerratio_help'] = 'Set the image container ratio to one of: 3-2, 3-1, 3-3, 2-3, 1-3, 4-3 or 3-4.';
+$string['setimagecontainerratio_help'] = 'Set the image container ratio to one of: 3-2 or 3-1.';
 $string['setimageresizemethod'] = 'Set the image resize method';
 $string['setimageresizemethod_help'] = "Set the image resize method to: 'Scale' or 'Crop' when resizing the image to fit the container.";
 $string['setbordercolour'] = 'Set the border colour';
@@ -163,6 +162,15 @@ $string['hidesectiontitle'] = 'Hide section title option';
 $string['hidesectiontitle_help'] = 'Hide the section title.';
 $string['defaulthidesectiontitle'] = 'Hide section title option';
 $string['defaulthidesectiontitle_desc'] = 'Hide the section title.';
+
+$string['hidenavside'] = 'Hide side navigation';
+$string['hidenavside_help'] = 'Hide side navigation arrows.';
+
+$string['sethidesectionlock'] = 'Show lock when restricted';
+$string['sethidesectionlock_help'] = 'Show padlock image when the section is restricted.';
+$string['defaultsethidesectionlock'] = 'Show lock when restricted';
+$string['defaultsethidesectionlock_desc'] = 'Show padlock image when the section is restricted.';
+
 $string['sectiontitletraillengthmaxoption'] = 'Section title trail length option';
 $string['sectiontitletraillengthmaxoption_help'] = 'Set the maximum length of the section title in the trail box.  Enter \'0\' for no truncation.';
 $string['defaultsectiontitletraillengthmaxoption'] = 'Section title trail length option';
@@ -234,8 +242,10 @@ $string['bottom'] = 'Bottom';
 $string['centre'] = 'Centre';
 $string['left'] = 'Left';
 $string['right'] = 'Right';
-//tipos fundo
+
+// Background options.
 $string['tipo_pista'] = 'Track';
+$string['tipo_pista2'] = 'Gray track';
 $string['tipo_rio'] = 'River';
 $string['tipo_quebra1'] = 'Puzzle 1';
 $string['tipo_quebra2'] = 'Puzzle 2';
@@ -243,13 +253,19 @@ $string['defaultsetshowbackground'] = 'Defaul style trail';
 $string['setshowbackground'] = 'Style Trail';
 $string['setshowbackground_help'] = 'Choose the track background';
 
-//tipos de check
+// Check options.
 $string['none'] = 'None';
 $string['check'] = 'Check';
 $string['star'] = 'Star';
 $string['like'] = 'Like';
 $string['setshowcheckstar'] = 'Check style';
 $string['setshowcheckstar_help'] = 'Choose the check style that will appear when the student completes all activities with section completion criteria.';
+$string['checked'] = 'Completed';
+
+// Lock options.
+$string['lock'] = 'Lock';
+$string['mini_lock'] = 'Mini lock';
+$string['locked'] = 'Locked';
 
 // Reset.
 $string['resetgrp'] = 'Reset:';

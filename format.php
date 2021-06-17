@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,10 +17,9 @@
 /**
  * Trail Format - A topics based format that uses a trail of user selectable images to popup a light box of the section.
  *
- * @package    course/format
- * @subpackage trail
- * @version    See the value of '$plugin->version' in version.php.
- * @copyright  &copy; 2012 G J Barnard in respect to modifications of standard topics format.
+ * @package    format_trail
+ * @copyright  &copy; 2019 Jose Wilson  in respect to modifications of grid format.
+ * @author     &copy; 2012 G J Barnard in respect to modifications of standard topics format.
  * @author     G J Barnard - {@link http://about.me/gjbarnard} and
  *                           {@link http://moodle.org/user/profile.php?id=442195}
  * @author     Based on code originally written by Paul Krix and Julian Ridden.
@@ -97,35 +95,45 @@ if ($imagecontaineralignment == 'left') {
 }
 echo 'justify-content: ' . $imagecontaineralignment . ';';
 echo '} ';
+echo '#lock {
+        z-index: 5;
+        position:absolute;
+        top: 0px;
+        right: 1px;
+        width: 32px;
+        height: 32px;
+        background-image:  url("' . $CFG->wwwroot . '/course/format/trail/pix/lock_mini.png");
+        background-repeat: no-repeat;
+    }';
 echo '#check {
         z-index: 5;
         position:absolute;
         top: 0px;
-        right: 0px;
+        right: 1px;
         width: 32px;
         height: 32px;
         background-image:  url("' . $CFG->wwwroot . '/course/format/trail/pix/check.png");
-        background-repeat: no-repeat; 
+        background-repeat: no-repeat;
     }';
 echo '#star {
         z-index: 5;
         position:absolute;
         top: 0px;
-        right: 0px;
+        right: 1px;
         width: 32px;
         height: 32px;
         background-image:  url("' . $CFG->wwwroot . '/course/format/trail/pix/star.png");
-        background-repeat: no-repeat; 
+        background-repeat: no-repeat;
     }';
 echo '#like {
         z-index: 5;
         position:absolute;
         top: 0px;
-        right: 0px;
+        right: 1px;
         width: 32px;
         height: 32px;
         background-image:  url("' . $CFG->wwwroot . '/course/format/trail/pix/like.png");
-        background-repeat: no-repeat; 
+        background-repeat: no-repeat;
     }';
 echo '#trailiconcontainer  ul.impar { position: relative;
     width: 565px;
@@ -154,7 +162,7 @@ if ($gfsettings['sectiontitlefontsize']) { // Font size is set.
 }
 echo 'text-align: ' . $gfsettings['sectiontitlealignment'] . ';';
 if ($gfsettings['sectiontitleboxposition'] == 1) { // Inside.
-    echo 'width: ' . ($gfsettings['imagecontainerwidth'] - 20) . 'px;'; // '20' is the total '.icon_content.content_inside' padding.
+    echo 'width: ' . ($gfsettings['imagecontainerwidth'] - 20) . 'px;';
 } else {
     echo 'width: ' . ($gfsettings['imagecontainerwidth'] + ($gfsettings['borderwidth'] * 2)) . 'px;';
 }
@@ -168,9 +176,8 @@ if ($gfsettings['bordercolour'][0] != '#') {
 }
 echo $gfsettings['bordercolour'] . ';';
 
-if ($gfsettings['imagecontainerbackgroundcolour'] == '999999' || $gfsettings['imagecontainerbackgroundcolour'] == '#999999') {
-    
-} else {
+if ($gfsettings['imagecontainerbackgroundcolour'] != '999999'
+        && $gfsettings['imagecontainerbackgroundcolour'] != '#999999') {
     echo 'background-color: ';
     if ($gfsettings['imagecontainerbackgroundcolour'][0] != '#') {
         echo '#';
@@ -217,7 +224,8 @@ echo $gfsettings['currentselectedsectioncolour'] . ';';
 echo '}';
 
 echo '.course-content ul.trailicons li.currentselected {';
-if ($gfsettings['currentselectedimagecontainercolour'] == '999999' || $gfsettings['currentselectedimagecontainercolour'] == '#999999') {
+if ($gfsettings['currentselectedimagecontainercolour'] == '999999'
+        || $gfsettings['currentselectedimagecontainercolour'] == '#999999') {
     echo 'background-color: rgba(12,11,44,0.2); border-radius: 15px;}';
 } else {
     echo 'background-color: ';

@@ -17,55 +17,70 @@
 /**
  * Trail Format - A topics based format that uses a trail of user selectable images to popup a light box of the section.
  *
- * @package    course/format
- * @subpackage trail
- * @version    See the value of '$plugin->version' in version.php.
- * @copyright  &copy; 2013 G J Barnard in respect to modifications of standard topics format.
+ * @package    format_trail
+ * @copyright  &copy; 2019 Jose Wilson  in respect to modifications of grid format.
+ * @author     &copy; 2012 G J Barnard in respect to modifications of standard topics format.
  * @author     G J Barnard - {@link http://about.me/gjbarnard} and
  *                           {@link http://moodle.org/user/profile.php?id=442195}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
+defined('MOODLE_INTERNAL') || die();
 require_once("HTML/QuickForm/text.php");
 
 /**
  * HTML class for a colorpopup type element
  *
- * @author       Iain Checkland - modified from ColourPicker by Jamie Pratt [thanks]
- * @access       public
+ * @package    format_trail
+ * @copyright  &copy; 2019 Jose Wilson  in respect to modifications of grid format.
+ * @author     &copy; 2012 G J Barnard in respect to modifications of standard topics format.
  */
-class MoodleQuickForm_gfcolourpopup extends HTML_QuickForm_text implements templatable {
+class moodlequickform_gfcolourpopup extends HTML_QuickForm_text implements templatable {
+
     use templatable_form_element {
         export_for_template as export_for_template_base;
     }
 
-    /*
-     * html for help button, if empty then no help
-     *
-     * @var string
+    /**
+     * @var string $helpbutton html for help button.
      */
-    public $_helpbutton = '';
-    public $_hiddenLabel = false;
+    public $helpbutton = '';
 
-    public function __construct($elementName = null, $elementLabel = null, $attributes = null, $options = null) {
-        parent::__construct($elementName, $elementLabel, $attributes);
+    /**
+     * @var boolean $hiddenlabel html for help button.
+     */
+    public $hiddenlabel = false;
+
+    /**
+     * moodlequickform_gfcolourpopup constructor.
+     *
+     * @param string $elementname
+     * @param string $elementlabel
+     * @param string $attributes
+     * @param string $options
+     */
+    public function __construct($elementname = null, $elementlabel = null, $attributes = null, $options = null) {
+        parent::__construct($elementname, $elementlabel, $attributes);
         /* Pretend we are a 'static' MoodleForm element so that we get the core_form/element-static template where
-           we can render our own markup via core_renderer::mform_element() in lib/outputrenderers.php.
-           used in combination with 'use' statement above and export_for_template() method below. */
+          we can render our own markup via core_renderer::mform_element() in lib/outputrenderers.php.
+          used in combination with 'use' statement above and export_for_template() method below. */
         $this->setType('static');
     }
 
-    /*
-     * PHP4 constructor method, kept for compatibility
+    /**
+     * setHiddenLabel.
+     *
+     * @param string $hiddenlabel
      */
-    public function MoodleQuickForm_gfcolourpopup($elementName = null, $elementLabel = null, $attributes = null, $options = null) {
-        self::__construct($elementName, $elementLabel, $attributes, $options);
+    public function sethiddenlabel($hiddenlabel) {
+        $this->hiddenlabel = $hiddenlabel;
     }
 
-    public function setHiddenLabel($hiddenLabel) {
-        $this->_hiddenLabel = $hiddenLabel;
-    }
-
-    public function toHtml() {
+    /**
+     * tohtml.
+     *
+     * @return void
+     */
+    public function tohtml() {
         global $CFG, $COURSE, $USER, $PAGE, $OUTPUT;
         $id = $this->getAttribute('id');
         $PAGE->requires->js('/course/format/trail/js/gf_colourpopup.js');
@@ -75,12 +90,12 @@ class MoodleQuickForm_gfcolourpopup extends HTML_QuickForm_text implements templ
             $colour = substr($colour, 1);
         }
         $content = "<input size='8' name='" . $this->getName() . "' value='" . $colour . "'id='{$id}' type='text' " .
-                    $this->_getAttrString($this->_attributes) . " >";
+                $this->_getAttrString($this->_attributes) . " >";
         $content .= html_writer::tag('span', '&nbsp;', array('id' => 'colpicked_' . $id, 'tabindex' => '-1',
-                                     'style' => 'background-color: #'.$colour.
-                                     '; cursor: pointer; margin: 0; padding: 0 8px; border: 1px solid black'));
-        $content .= html_writer::start_tag('div', array('id' => 'colpick_'.$id,
-                                           'style' => "display:none; position:absolute; z-index:500;",
+                    'style' => 'background-color: #' . $colour .
+                    '; cursor: pointer; margin: 0; padding: 0 8px; border: 1px solid black'));
+        $content .= html_writer::start_tag('div', array('id' => 'colpick_' . $id,
+                    'style' => "display:none; position:absolute; z-index:500;",
                     'class' => 'form-colourpicker defaultsnext'));
         $content .= html_writer::tag('div', '', array('class' => 'admin_colourpicker clearfix'));
         $content .= html_writer::end_tag('div');
@@ -96,7 +111,7 @@ class MoodleQuickForm_gfcolourpopup extends HTML_QuickForm_text implements templ
      *
      * @return void
      */
-    public function _generateId() {
+    public function generateid() {
         static $idx = 1;
 
         if (!$this->getAttribute('id')) {
@@ -107,11 +122,11 @@ class MoodleQuickForm_gfcolourpopup extends HTML_QuickForm_text implements templ
     /**
      * set html for help button
      *
-     * @param array $help array of arguments to make a help button
+     * @param array $helpbuttonargs array of arguments to make a help button
      * @param string $function function name to call to get html
      */
-    public function setHelpButton($helpbuttonargs, $function = 'helpbutton') {
-        debugging('component setHelpButton() is not used any more, please use $mform->setHelpButton() instead');
+    public function sethelpbutton($helpbuttonargs, $function = 'helpbutton') {
+        debugging('component sethelpbutton() is not used any more, please use $mform->sethelpbutton() instead');
     }
 
     /**
@@ -119,8 +134,8 @@ class MoodleQuickForm_gfcolourpopup extends HTML_QuickForm_text implements templ
      *
      * @return  string html for help button
      */
-    public function getHelpButton() {
-        return $this->_helpbutton;
+    public function gethelpbutton() {
+        return $this->helpbutton;
     }
 
     /**
@@ -130,7 +145,7 @@ class MoodleQuickForm_gfcolourpopup extends HTML_QuickForm_text implements templ
      *
      * @return string
      */
-    public function getElementTemplateType() {
+    public function getelementtemplatetype() {
         if ($this->_flagFrozen) {
             return 'static';
         } else {
@@ -138,10 +153,17 @@ class MoodleQuickForm_gfcolourpopup extends HTML_QuickForm_text implements templ
         }
     }
 
+    /**
+     * set html for help button
+     *
+     * @param \renderer_base $output $helpbuttonargs array of arguments to make a help button
+     * @return string
+     */
     public function export_for_template(renderer_base $output) {
         $context = $this->export_for_template_base($output);
-        $context['html'] = $this->toHtml();
+        $context['html'] = $this->tohtml();
         $context['staticlabel'] = false; // Not a static label!
         return $context;
     }
+
 }

@@ -17,10 +17,9 @@
 /**
  * Trail Information
  *
- * @package    course/format
- * @subpackage Trail
- * @version    See the value of '$plugin->version' in version.php.
- * @copyright  &copy; 2012 G J Barnard in respect to modifications of standard topics format.
+ * @package    format_trail
+ * @copyright  &copy; 2019 Jose Wilson  in respect to modifications of grid format.
+ * @author     &copy; 2012 G J Barnard in respect to modifications of standard topics format.
  * @author     G J Barnard - {@link http://about.me/gjbarnard} and
  *                           {@link http://moodle.org/user/profile.php?id=442195}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License
@@ -30,8 +29,11 @@ defined('MOODLE_INTERNAL') || die();
 require_once($CFG->dirroot . '/course/format/trail/lib.php');
 
 /**
- * Restore plugin class that provides the necessary information
- * needed to restore one trail format course.
+ * restore_format_trail_plugin class
+ *
+ * @package    format_trail
+ * @copyright  &copy; 2019 Jose Wilson  in respect to modifications of grid format.
+ * @author     &copy; 2012 G J Barnard in respect to modifications of standard topics format.
  */
 class restore_format_trail_plugin extends restore_format_plugin {
 
@@ -92,6 +94,9 @@ class restore_format_trail_plugin extends restore_format_plugin {
     /**
      * Process the 'plugin_format_trail_course' element within the 'course' element in the 'course.xml' file in the '/course'
      * folder of the zipped backup 'mbz' file.
+     *
+     * @param string $data
+     * @return string.
      */
     public function process_trail($data) {
         global $DB;
@@ -113,16 +118,22 @@ class restore_format_trail_plugin extends restore_format_plugin {
         }
 
         if (!($course = $DB->get_record('course', array('id' => $data->courseid)))) {
-            print_error('invalidcourseid', 'error');
+            echo 'invalidcourseid', 'error';
         } // From /course/view.php.
         // No need to annotate anything here.
     }
-
+    /**
+     * Get structure.
+     *
+     * @return none
+     */
     protected function after_execute_structure() {
     }
 
     /**
-     * Returns the paths to be handled by the plugin at section level
+     * Returns the paths to be handled by the plugin at section level.
+     *
+     * @return string
      */
     protected function define_section_plugin_structure() {
 
@@ -149,6 +160,8 @@ class restore_format_trail_plugin extends restore_format_plugin {
      * created in '_make_block_icon_topics' of lib.php of the format.
      * Still need courseid in the 'format_trail_icon' table as it is used in discovering what records to remove when deleting a
      * course, see lib.php 'format_trail_delete_course'.
+     * @param string $data
+     * @return string.
      */
     public function process_trailsection($data) {
         global $DB;

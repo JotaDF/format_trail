@@ -48,7 +48,13 @@
  * @author     Based on code originally written by Joby Harding, Bas Brands, David Scotson and many other contributors.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
+/* eslint-env node */
+/* eslint-disable camelcase */
+/**
+ * Grunt configuration.
+ *
+ * @param {Object} grunt
+ */
 module.exports = function(grunt) { // jshint ignore:line
 
     // Import modules.
@@ -59,8 +65,8 @@ module.exports = function(grunt) { // jshint ignore:line
 
     if ((build != 'p') && (build != 'd')) {
         build = 'p';
-        console.log('-build switch only accepts \'p\' for production or \'d\' for development,');
-        console.log('e.g. -build=p or -build=d.  Defaulting to development.');
+        grunt.log.debug('-build switch only accepts \'p\' for production or \'d\' for development,');
+        grunt.log.debug('e.g. -build=p or -build=d.  Defaulting to development.');
     }
 
     // PHP strings for exec task.
@@ -86,7 +92,7 @@ module.exports = function(grunt) { // jshint ignore:line
             decache: {
                 cmd: 'php -r "' + decachephp + '"',
                 callback: function(error) {
-                    // exec will output error messages
+                    // Exec will output error messages
                     // just add one to confirm success.
                     if (!error) {
                         grunt.log.writeln("Moodle cache reset.");

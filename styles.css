@@ -16,10 +16,9 @@
 /**
  * Trail Format - A topics based format that uses a trail of user selectable images to popup a light box of the section.
  *
- * @package    course/format
- * @subpackage trail
- * @version    See the value of '$plugin->version' in version.php.
- * @copyright  &copy; 2012 onwards G J Barnard in respect to modifications of standard topics format.
+ * @package    format_trail
+ * @copyright  &copy; 2019 Jose Wilson  in respect to modifications of grid format.
+ * @author     &copy; 2012 G J Barnard in respect to modifications of standard topics format.
  * @author     G J Barnard - {@link http://about.me/gjbarnard} and
  *                           {@link http://moodle.org/user/profile.php?id=442195}
  * @author     Based on code originally written by Paul Krix and Julian Ridden.
@@ -49,7 +48,7 @@
 
 /* Change of logic such that topics are hidden by default and then shown to prevent 'flash' whilst JavaScript kicks in. */
 body.jsenabled li.trail_section.hide_section {
-    display: none !important; /* Important to override bootstrap/moodle/undo.less. */
+    display: none; /* Important to override bootstrap/moodle/undo.less. */
 }
 
 div#trailmiddle-column > ul {
@@ -64,11 +63,11 @@ div#trailmiddle-column > ul {
 .course-content ul.gtopics li.section {
     list-style: none;
     margin: 5px 0 0 0;
-    padding:0;
+    padding: 0;
 }
 
 .course-content ul.gtopics li.section .content {
-    margin:0 40px;
+    margin: 0 40px;
 }
 
 .course-content ul.gtopics li.section .side {
@@ -92,13 +91,6 @@ div#trailmiddle-column > ul {
     padding: 0;
     width: 100%;
 }
-/*#trailiconcontainer ul.trailicons {
-    position: relative;
-    width: 900px;
-    height: 200px;
-    background-image:  url("/moodle/course/format/trail/pix/trilha_topo.png");
-    background-repeat: no-repeat;
-}*/
 #trailiconcontainer ul.trailicons {
     display: flex;
     flex-wrap: wrap;
@@ -232,7 +224,6 @@ div#trailmiddle-column > ul {
 div#trailshadebox_overlay {
     background: black;
     /* for IE */
-    filter: alpha(opacity=70);
     height: 500px;
     left: 0;
     /* CSS3 standard */
@@ -292,7 +283,8 @@ body.jsenabled #trailshadebox_content.hide_content {
     list-style: none;
 }
 
-#trailshadebox_content ul li ul li, #trailshadebox_content ul li ol li {
+#trailshadebox_content ul li ul li,
+#trailshadebox_content ul li ol li {
     border-bottom: none;
     padding-bottom: 4px;
     padding-top: 2px;
@@ -304,10 +296,9 @@ body.jsenabled #trailshadebox_content.hide_content {
 
 #trailshadebox_content ul li ol li {
     list-style: decimal outside none;
-} 
+}
 
 .trailcursor #trailshadebox_close {
-    /*rtl:ignore*/
     cursor: url('[[pix:format_trail|fa-hand-o-up-f]]'), auto;
 }
 
@@ -335,7 +326,7 @@ body.jsenabled #trailshadebox_content.hide_content {
     opacity: 0.9;
 }
 
-.trailshadebox_area  {
+.trailshadebox_area {
     height: 100%;
     position: absolute;
     top: 0;
@@ -455,7 +446,8 @@ body.jsenabled #trailshadebox_content.hide_content {
     right: -18px;
 }
 
-.trailshadebox_arrow.trailshadebox_mobile, .trailshadebox_arrow.trailshadebox_mobile:hover {
+.trailshadebox_arrow.trailshadebox_mobile,
+.trailshadebox_arrow.trailshadebox_mobile:hover {
     opacity: 1;
 }
 
@@ -483,7 +475,8 @@ body.jsenabled #trailshadebox_content.hide_content {
     right: -31px;
 }
 
-.trailshadebox_arrow.trailshadebox_tablet, .trailshadebox_arrow.trailshadebox_tablet:hover {
+.trailshadebox_arrow.trailshadebox_tablet,
+.trailshadebox_arrow.trailshadebox_tablet:hover {
     opacity: 1;
 }
 
@@ -497,11 +490,8 @@ body.jsenabled #trailshadebox_content.hide_content {
     border-color: #aaa;
     -webkit-filter: grayscale(100%);
     -moz-filter: grayscale(100%);
-    -ms-filter: grayscale(100%);
     -o-filter: grayscale(100%);
-    filter: grayscale(100%);
-    filter: gray; /* IE 6-9 */
-    filter: alpha(opacity=70);
+    filter: grayscale(100%) gray;
     opacity: 0.7;
 }
 /* @end */

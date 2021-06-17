@@ -17,10 +17,9 @@
 /**
  * Trail Format - A topics based format that uses a trail of user selectable images to popup a light box of the section.
  *
- * @package    course/format
- * @subpackage trail
- * @version    See the value of '$plugin->version' in version.php.
- * @copyright  &copy; 2012 G J Barnard in respect to modifications of standard topics format.
+ * @package    format_trail
+ * @copyright  &copy; 2019 Jose Wilson  in respect to modifications of grid format.
+ * @author     &copy; 2012 G J Barnard in respect to modifications of standard topics format.
  * @author     G J Barnard - {@link http://about.me/gjbarnard} and
  *                           {@link http://moodle.org/user/profile.php?id=442195}
  * @author     Based on code originally written by Paul Krix and Julian Ridden.
@@ -128,9 +127,9 @@ $string['defaultnewactivity_desc'] = "Mostrar a nova imagem de notificação de 
 $string['setimagecontaineralignment'] = 'Defina o alinhamento do container de imagem';
 $string['setimagecontaineralignment_help'] = 'Defina a largura do recipiente de imagem para um dos seguintes: Esquerda, Centro ou Direita';
 $string['setimagecontainerwidth'] = 'Defina a largura do container de imagem';
-$string['setimagecontainerwidth_help'] = 'Defina a largura do container de imagem para um dos seguintes: 128, 192, 210, 256, 320, 384, 448, 512, 576, 640, 704 ou 768';
+$string['setimagecontainerwidth_help'] = 'Defina a largura do container de imagem para um dos seguintes: 128, 192 or 210';
 $string['setimagecontainerratio'] = 'Defina a proporção do container de imagens em relação à largura';
-$string['setimagecontainerratio_help'] = 'Defina a proporção do recipiente de imagem para um dos seguintes: 3-2, 3-1, 3-3, 2-3, 1-3, 4-3 ou 3-4.';
+$string['setimagecontainerratio_help'] = 'Defina a proporção do recipiente de imagem para um dos seguintes: 3-2 or 3-1.';
 $string['setimageresizemethod'] = 'Defina o método de redimensionamento da imagem';
 $string['setimageresizemethod_help'] = "Defina o método de redimensionamento da imagem para: 'Escala' ou 'Recortar' ao redimensionar a imagem para caber no recipiente.";
 $string['setbordercolour'] = 'Definir a cor da borda';
@@ -163,6 +162,15 @@ $string['hidesectiontitle'] = 'Ocultar opção do título da seção';
 $string['hidesectiontitle_help'] = 'Ocultar o título da seção.';
 $string['defaulthidesectiontitle'] = 'Ocultar opção do título da seção';
 $string['defaulthidesectiontitle_desc'] = 'Ocultar o título da seção.';
+
+$string['hidenavside'] = 'Ocultar navegação lateral';
+$string['hidenavside_help'] = 'Ocultar setas de navegação lateral.';
+
+$string['sethidesectionlock'] = 'Mostrar cadeado quando tiver restrição';
+$string['sethidesectionlock_help'] = 'Mostrar imagem do cadeado quando a seção tiver restrição.';
+$string['defaultsethidesectionlock'] = 'Mostrar cadeado quando tiver restrição';
+$string['defaultsethidesectionlock_desc'] = 'Mostrar imagem do cadeado quando a seção tiver restrição.';
+
 $string['sectiontitletraillengthmaxoption'] = 'Opção de comprimento da trilha do título da seção';
 $string['sectiontitletraillengthmaxoption_help'] = 'Defina o comprimento máximo do título da seção na caixa de trilha. Digite \'0\' para não truncamento.';
 $string['defaultsectiontitletraillengthmaxoption'] = 'Opção de comprimento da trilha do título da seção';
@@ -235,22 +243,29 @@ $string['centre'] = 'Centro';
 $string['left'] = 'Esquerda';
 $string['right'] = 'Direita';
 
-//tipos fundo
+// Background options.
 $string['tipo_pista'] = 'Pista';
+$string['tipo_pista2'] = 'Pista cinza';
 $string['tipo_rio'] = 'Rio';
 $string['tipo_quebra1'] = 'Quebra-cabeças 1';
 $string['tipo_quebra2'] = 'Quebra-cabeças 2';
 $string['defaultsetshowbackground'] = 'Estilo da trilha';
 $string['setshowbackground'] = 'Estilo da Trilha';
 $string['setshowbackground_help'] = 'Escolha o fundo da Trilha';
-//tipos de check
+
+// Check options.
 $string['none'] = 'Nenhum';
 $string['check'] = 'Check';
 $string['star'] = 'Estrela';
 $string['like'] = 'Joínha';
 $string['setshowcheckstar'] = 'Estilo do check';
 $string['setshowcheckstar_help'] = 'Escolha o estilo de check que aparecerá quando o aluno concluir todas as atividades com critérios de conclusão da seção.';
+$string['checked'] = 'Completada';
 
+// Lock options.
+$string['lock'] = 'Tranca';
+$string['mini_lock'] = 'Mini tranca';
+$string['locked'] = 'Trancado';
 // Reset.
 $string['resetgrp'] = 'Resetar:';
 $string['resetallgrp'] = 'Resetar tudo:';

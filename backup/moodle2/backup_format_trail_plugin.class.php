@@ -17,10 +17,9 @@
 /**
  * Trail Information
  *
- * @package    course/format
- * @subpackage Trail
- * @version    See the value of '$plugin->version' in version.php.
- * @copyright  &copy; 2012 G J Barnard in respect to modifications of standard topics format.
+ * @package    format_trail
+ * @copyright  &copy; 2019 Jose Wilson  in respect to modifications of grid format.
+ * @author     &copy; 2012 G J Barnard in respect to modifications of standard topics format.
  * @author     G J Barnard - {@link http://about.me/gjbarnard} and
  *                           {@link http://moodle.org/user/profile.php?id=442195}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU Public License
@@ -58,7 +57,9 @@ class backup_format_trail_plugin extends backup_format_plugin {
         // Don't need to annotate ids nor files.
         return $plugin;
     }
-
+    /**
+     * Returns this appears to be a bit silly as this code is executed even if the course is not in the 'trail' format.
+     */
     private function delete_displayed_images() {
         global $CFG, $DB;
 
