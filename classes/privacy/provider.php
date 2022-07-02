@@ -17,11 +17,10 @@
 /**
  * Trail Format - A topics based format that uses a trail of user selectable images to popup a light box of the section.
  *
- * @package    course/format
- * @subpackage trail
+ * @package    format_trail
  * @category   privacy
- * @version    See the value of '$plugin->version' in version.php.
- * @copyright  &copy; 2018-onwards G J Barnard based upon work done by Marina Glancy.
+ * @copyright  &copy; 2019 Jose Wilson  in respect to modifications of grid format.
+ * @author     &copy; 2012 G J Barnard in respect to modifications of standard topics format.
  * @author     G J Barnard - {@link http://about.me/gjbarnard} and
  *                           {@link http://moodle.org/user/profile.php?id=442195}
  * @author     Based on code originally written by Paul Krix and Julian Ridden.

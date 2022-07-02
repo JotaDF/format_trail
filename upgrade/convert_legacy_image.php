@@ -1,5 +1,4 @@
 <?php
-
 // This file is part of Moodle - http://moodle.org/
 //
 // Moodle is free software: you can redistribute it and/or modify
@@ -18,16 +17,17 @@
 /**
  * Trail Format - A topics based format that uses a trail of user selectable images to popup a light box of the section.
  *
- * @package    course/format
- * @subpackage trail
- * @version    See the value of '$plugin->version' in version.php.
- * @copyright  &copy; 2013 G J Barnard.
+ * @package    format_trail
+ * @copyright  &copy; 2019 Jose Wilson  in respect to modifications of grid format.
+ * @author     &copy; 2012 G J Barnard in respect to modifications of standard topics format.
  * @author     G J Barnard - {@link http://about.me/gjbarnard} and
  *                           {@link http://moodle.org/user/profile.php?id=442195}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 /* Imports */
-require_once('../../../../config.php');
+
+defined('MOODLE_INTERNAL') || die();
+
 require_once($CFG->dirroot . '/repository/lib.php');
 require_once($CFG->libdir . '/gdlib.php');
 
@@ -38,6 +38,11 @@ $crop = optional_param('crop', 0, PARAM_INT);  // Set to 1 to have cropped image
 define('TRAIL_ITEM_IMAGE_WIDTH', 210);
 define('TRAIL_ITEM_IMAGE_HEIGHT', 140);
 
+/**
+ * Get trail ids courses.
+ *
+ * @return array
+ */
 function trail_get_courseids() {
     global $DB;
 
@@ -46,7 +51,11 @@ function trail_get_courseids() {
     }
     return $courseids;
 }
-
+/**
+ * Get ids courses.
+ *
+ * @return array
+ */
 function course_get_courseids() {
     global $DB;
 
@@ -55,7 +64,12 @@ function course_get_courseids() {
     }
     return $courseids;
 }
-
+/**
+ * Get icons.
+ *
+ * @param int $courseid
+ * @return string
+ */
 function trail_get_icons($courseid) {
     global $DB;
 
@@ -68,7 +82,11 @@ function trail_get_icons($courseid) {
     }
     return $sectionicons;
 }
-
+/**
+ * Get files.
+ *
+ * @return string
+ */
 function trail_files() {
     global $DB;
 
@@ -80,7 +98,7 @@ function trail_files() {
 
 $courseids = course_get_courseids();
 if ($logverbose) {
-    echo('<p>Course ids: ' . print_r($courseids, true) . '.</p>');
+    echo('<p>Course ids: ' . $courseids . '.</p>');
 }
 
 if ($courseids) {
@@ -90,8 +108,7 @@ if ($courseids) {
     if ($logverbose) {
         $sectionfiles = trail_files();
         if ($sectionfiles) {
-            echo('<p>Files table before: ' . print_r($sectionfiles, true) . '.</p>');
-            error_log('Files table before: ' . print_r($sectionfiles, true) . '.');
+            echo('<p>Files table before: ' . $sectionfiles . '.</p>');
         }
     }
 
@@ -109,24 +126,21 @@ if ($courseids) {
 
             if ($contextid) {
                 if ($logverbose) {
-                    echo('<p>Section icons: ' . print_r($sectionicons, true) . '.</p>');
+                    echo('<p>Section icons: ' . $sectionicons . '.</p>');
                 }
 
                 if ($sectionicons) {
                     if ($logverbose) {
-                        echo('<p>Converting legacy images ' . print_r($sectionicons, true) . ".</p>");
-                        error_log('Converting legacy images ' . print_r($sectionicons, true) . '.');
+                        echo('<p>Converting legacy images ' . $sectionicons . ".</p>");
                     }
                     foreach ($sectionicons as $sectionicon) {
 
                         if (isset($sectionicon->image)) {
                             echo('<p>Converting legacy image ' . $sectionicon->image . ".</p>");
-                            error_log('Converting legacy image ' . $sectionicon->image . '.');
 
-                            if ($temp_file = $fs->get_file($contextid, 'course', 'legacy', 0, '/icons/', $sectionicon->image)) {
+                            if ($tempfile = $fs->get_file($contextid, 'course', 'legacy', 0, '/icons/', $sectionicon->image)) {
 
-                                echo('<p> Stored file:' . print_r($temp_file, true) . '</p>');
-                                error_log(print_r($temp_file, true));
+                                echo('<p> Stored file:' . $tempfile . '</p>');
                                 // Resize the image and save it...
                                 $created = time();
                                 $storedfilerecord = array(
@@ -140,77 +154,70 @@ if ($courseids) {
                                     'timemodified' => $created);
 
                                 try {
-                                    $convert_success = true;
-                                    $mime = $temp_file->get_mimetype();
+                                    $convertsuccess = true;
+                                    $mime = $tempfile->get_mimetype();
 
                                     $storedfilerecord['mimetype'] = $mime;
 
                                     $tmproot = make_temp_directory('trailformaticon');
-                                    $tmpfilepath = $tmproot . '/' . $temp_file->get_contenthash();
-                                    $temp_file->copy_content_to($tmpfilepath);
+                                    $tmpfilepath = $tmproot . '/' . $tempfile->get_contenthash();
+                                    $tempfile->copy_content_to($tmpfilepath);
 
                                     $data = generate_image($tmpfilepath, TRAIL_ITEM_IMAGE_WIDTH, TRAIL_ITEM_IMAGE_HEIGHT, $crop);
                                     if (!empty($data)) {
                                         $fs->create_file_from_string($storedfilerecord, $data);
                                     } else {
-                                        $convert_success = false;
+                                        $convertsuccess = false;
                                     }
                                     unlink($tmpfilepath);
 
-                                    if ($convert_success == false) {
+                                    if ($convertsuccess == false) {
                                         print('<p>Image ' . $sectionicon->image . ' failed to convert.</p>');
-                                        error_log('Image ' . $sectionicon->image . ' failed to convert.');
                                     } else {
                                         print('<p>Image ' . $sectionicon->image . ' converted.</p>');
-                                        error_log('Image ' . $sectionicon->image . ' converted.');
 
                                         // Clean up and remove the old thumbnail too.
-                                        $temp_file->delete();
-                                        unset($temp_file);
-                                        if ($temp_file = $fs->get_file($contextid, 'course', 'legacy', 0, '/icons/', 'tn_' . $sectionicon->image)) {
+                                        $tempfile->delete();
+                                        unset($tempfile);
+                                        if ($tempfile = $fs->get_file($contextid, 'course',
+                                                'legacy', 0, '/icons/', 'tn_' . $sectionicon->image)) {
                                             // Remove thumbnail.
-                                            $temp_file->delete();
-                                            unset($temp_file);
+                                            $tempfile->delete();
+                                            unset($tempfile);
                                         }
                                     }
                                 } catch (Exception $e) {
-                                    if (isset($temp_file)) {
-                                        $temp_file->delete();
-                                        unset($temp_file);
+                                    if (isset($tempfile)) {
+                                        $tempfile->delete();
+                                        unset($tempfile);
                                     }
                                     print('Trail Format Convert Image Exception:...');
                                     debugging($e->getMessage());
                                 }
                             } else {
                                 echo('<p>Image ' . $sectionicon->image . ' could not be found in the legacy files.</p>');
-                                error_log('Image ' . $sectionicon->image . ' could not be found in the legacy files.');
                             }
                         } else {
-                            echo('<p>Section icon not set for course id: ' . $courseid . ', section id: ' . $sectionicon->sectionid . '.</p>');
-                            error_log('Section icon not set for course id: ' . $courseid . ', section id: ' . $sectionicon->sectionid . '.');
+                            echo('<p>Section icon not set for course id: ' . $courseid . ', section id: '
+                                    . $sectionicon->sectionid . '.</p>');
                         }
                     }
                 } else {
                     echo('<p>No section icons found for course id: ' . $courseid . '.</p>');
-                    error_log('No section icons found for course id: ' . $courseid . '.');
                 }
             } else {
                 echo('<p>Cannot get context id for course id: ' . $courseid . '.</p>');
-                error_log('Cannot get context id for course id: ' . $courseid . '.');
             }
         } else {
             echo('<p>Course id: ' . $courseid . ', is not a Trail format course or cannot get the sections for it.</p>');
-            error_log('Course id: ' . $courseid . ', is not a Trail format course or cannot get the sections for it.');
         }
     }
     if ($logverbose) {
         $sectionfiles = trail_files();
         if ($sectionfiles) {
-            echo('<p>Files table after: ' . print_r($sectionfiles, true) . '.</p>');
-            error_log('Files table after: ' . print_r($sectionfiles, true) . '.');
+            echo('<p>Files table after: ' . $sectionfiles . '.</p>');
         }
     }
 } else {
     echo('<p>Cannot get list of course ids from format_trail_icon table.</p>');
-    error_log('Cannot get list of course ids from format_trail_icon table.');
 }

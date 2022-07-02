@@ -17,10 +17,9 @@
 /**
  * Trail Format - A topics based format that uses a trail of user selectable images to popup a light box of the section.
  *
- * @package    course/format
- * @subpackage trail
- * @version    See the value of '$plugin->version' in version.php.
- * @copyright  &copy; 2013 G J Barnard in respect to modifications of standard topics format.
+ * @package    format_trail
+ * @copyright  &copy; 2019 Jose Wilson  in respect to modifications of grid format.
+ * @author     &copy; 2012 G J Barnard in respect to modifications of standard topics format.
  * @author     G J Barnard - {@link http://about.me/gjbarnard} and
  *                           {@link http://moodle.org/user/profile.php?id=442195}
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
@@ -337,6 +336,16 @@ if ($ADMIN->fulltree) {
     $choices = array(
         1 => new lang_string('no'),   // No.
         2 => new lang_string('yes')   // Yes.
+    );
+    $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
+    /* Show style background. */
+    $name = 'format_trail/defaultsetshowbackground';
+    $title = get_string('defaultsetshowbackground', 'format_trail');
+    $description = get_string('defaultsetshowbackground', 'format_trail');
+    $default = format_trail::get_default_set_show_background();
+    $choices = array(
+        1 => new lang_string('tipo_pista', 'format_trail'),
+        2 => new lang_string('tipo_rio', 'format_trail')
     );
     $settings->add(new admin_setting_configselect($name, $title, $description, $default, $choices));
 }

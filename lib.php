@@ -17,52 +17,100 @@
 /**
  * Trail Format - A topics based format that uses a trail of user selectable images to popup a light box of the section.
  *
- * @package    course/format
- * @subpackage trail
- * @version    See the value of '$plugin->version' in version.php.
- * @copyright  &copy; 2012+ G J Barnard in respect to modifications of standard topics format.
+ * @package    format_trail
+ * @copyright  &copy; 2019 Jose Wilson  in respect to modifications of grid format.
+ * @author     &copy; 2012 G J Barnard in respect to modifications of standard topics format.
  * @author     G J Barnard - {@link http://about.me/gjbarnard} and
  *                           {@link http://moodle.org/user/profile.php?id=442195}
  * @author     Based on code originally written by Paul Krix and Julian Ridden.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
-
 defined('MOODLE_INTERNAL') || die();
 
 require_once($CFG->dirroot . '/course/format/lib.php'); // For format_base.
 
+/**
+ * format_trail class
+ *
+ * @package    format_trail
+ * @copyright  &copy; 2019 Jose Wilson  in respect to modifications of grid format.
+ * @author     &copy; 2012 G J Barnard in respect to modifications of standard topics format.
+ */
 class format_trail extends format_base {
 
-    // CONTRIB-4099:....
-    // Width constants - 128, 192, 210, 256, 320, 384, 448, 512, 576, 640, 704 and 768:...
-    private static $imagecontainerwidths = array(128 => '128', 192 => '192', 210 => '210', 256 => '256', 320 => '320',
-        384 => '384', 448 => '448', 512 => '512', 576 => '576', 640 => '640', 704 => '704', 768 => '768');
-    // Ratio constants - 3-2, 3-1, 3-3, 2-3, 1-3, 4-3 and 3-4:...
+    // CONTRIB-4099.
+    /**
+     * @var array $imagecontainerwidths.
+     */
+    private static $imagecontainerwidths = array(192 => '192', 210 => '210');
+
+    /**
+     * @var array $imagecontainerratios.
+     */
     private static $imagecontainerratios = array(
-        1 => '3-2', 2 => '3-1', 3 => '3-3', 4 => '2-3', 5 => '1-3', 6 => '4-3', 7 => '3-4');
-    // Border width constants - 0 to 10:....
+        1 => '3-2', 2 => '3-1');
+
+    /**
+     * @var array $borderwidths.
+     */
     private static $borderwidths = array(0 => '0', 1 => '1', 2 => '2', 3 => '3', 4 => '4', 5 => '5', 6 => '6', 7 => '7',
         8 => '8', 9 => '9', 10 => '10');
     /* Image holder height and new activity position for all on the basis that once calculated the majority of courses
       will be the same. */
+
+    /**
+     * @var int $currentwidth.
+     */
     private static $currentwidth = 210;
+
+    /**
+     * @var int $currentratio.
+     */
     private static $currentratio = 1; // 3-2.
+    /**
+     * @var int $currentborderwidth.
+     */
     private static $currentborderwidth = 3;
+
+    /**
+     * @var int $currentheight.
+     */
     private static $currentheight = 140;
+
+    /**
+     * @var int $activitymargintop.
+     */
     private static $activitymargintop = 101;
+
+    /**
+     * @var int $activitymarginleft.
+     */
     private static $activitymarginleft = 1118;
-    // Opacity constants - 0 to 1:....
+
+    /**
+     * @var array $opacities.
+     */
     private static $opacities = array('0' => '0.0', '.1' => '0.1', '.2' => '0.2', '.3' => '0.3', '.4' => '0.4',
-       '.5' => '0.5', '.6' => '0.6', '.7' => '0.7', '.8' => '0.8', '.9' => '0.9', '1' => '1.0');
+        '.5' => '0.5', '.6' => '0.6', '.7' => '0.7', '.8' => '0.8', '.9' => '0.9', '1' => '1.0');
+
+    /**
+     * @var array $sectiontitlefontsizes.
+     */
     private static $sectiontitlefontsizes = array(0 => '0', 12 => '12', 13 => '13', 14 => '14', 15 => '15', 16 => '16',
-       17 => '17', 18 => '18', 19 => '19', 20 => '20', 21 => '21', 22 => '22', 23 => '23', 24 => '24');
+        17 => '17', 18 => '18', 19 => '19', 20 => '20', 21 => '21', 22 => '22', 23 => '23', 24 => '24');
+
+    /**
+     * @var string $settings.
+     */
     private $settings;
-    private $section0attop = null; // Boolean to state if section zero is at the top (true) or in the trail (false), if null then uninitialized.
+
+    /**
+     * @var boolean $section0attop.
+     */
+    private $section0attop = null;
 
     /**
      * Creates a new instance of class
-     *
-     * Please use {@link course_get_format($courseorid)} to get an instance of the format class
      *
      * @param string $format
      * @param int $courseid
@@ -79,7 +127,6 @@ class format_trail extends format_base {
     /**
      * States if section 0 is at the top.
      *
-     * @param stdClass $section Section object from database or just field course_sections section
      * @return string The default value for the section name.
      */
     public function is_section0_attop() {
@@ -339,6 +386,14 @@ class format_trail extends format_base {
     }
 
     /**
+     * Gets the default set show section title summary position.
+     * @return int Default default set show section title summary position.
+     */
+    public static function get_default_set_show_background() {
+        return 1; // Top.
+    }
+
+    /**
      * Gets the default section title summary max length.
      * @return int Default default section title summary max length.
      */
@@ -378,6 +433,10 @@ class format_trail extends format_base {
         return '/trailimage/';
     }
 
+    /**
+     * Gets the max width image.
+     * @return int The path.
+     */
     public static function get_maximum_image_width() {
         return 768;
     }
@@ -401,7 +460,7 @@ class format_trail extends format_base {
         $settings = $this->get_settings();
         $returnvalue = 'top';
 
-        switch($settings['setshowsectiontitlesummaryposition']) {
+        switch ($settings['setshowsectiontitlesummaryposition']) {
             case 1:
                 $returnvalue = 'top';
                 break;
@@ -432,7 +491,7 @@ class format_trail extends format_base {
         } if ($section->section == 0) {
             return get_string('topic0', 'format_trail');
         } else {
-            return get_string('topic', 'format_trail').' '. $section->section;
+            return get_string('topic', 'format_trail') . ' ' . $section->section;
         }
     }
 
@@ -484,7 +543,7 @@ class format_trail extends format_base {
             } else if ($sectionno == 0 && $usercoursedisplay == COURSE_DISPLAY_MULTIPAGE && (!$this->is_section0_attop())) {
                 $url->param('section', $sectionno);
             } else if ($sectionno == 0 && $usercoursedisplay == COURSE_DISPLAY_MULTIPAGE && $this->is_section0_attop() &&
-                   ($this->get_settings()['setsection0ownpagenotrailonesection'] == 2)) {
+                    ($this->get_settings()['setsection0ownpagenotrailonesection'] == 2)) {
                 $url->param('section', $sectionno);
             } else {
                 $url->set_anchor('section-' . $sectionno);
@@ -498,7 +557,6 @@ class format_trail extends format_base {
      *
      * The returned object's property (boolean)capable indicates that
      * the course format supports Moodle course ajax features.
-     * The property (array)testedbrowsers can be used as a parameter for {@link ajaxenabled()}.
      *
      * @return stdClass
      */
@@ -578,6 +636,22 @@ class format_trail extends format_base {
                 'coursedisplay' => array(
                     'default' => $courseconfig->coursedisplay,
                     'type' => PARAM_INT
+                ),
+                'hidenavside' => array(
+                    'default' => get_config('format_trail', 'defaulthidenavside'),
+                    'type' => PARAM_INT
+                ),
+                'hidesectionlock' => array(
+                    'default' => get_config('format_trail', 'defaulthidesectionlock'),
+                    'type' => PARAM_INT
+                ),
+                'showbackground' => array(
+                    'default' => get_config('format_trail', 'defaultsetshowbackground'),
+                    'type' => PARAM_ALPHANUM
+                ),
+                'showcheckstar' => array(
+                    'default' => get_config('format_trail', 'defaultsetshowcheckstar'),
+                    'type' => PARAM_ALPHANUM
                 ),
                 'imagecontaineralignment' => array(
                     'default' => get_config('format_trail', 'defaultimagecontaineralignment'),
@@ -750,6 +824,7 @@ class format_trail extends format_base {
                     'help_component' => 'moodle',
                 )
             );
+
             if (has_capability('format/trail:changeimagecontaineralignment', $context)) {
                 $courseformatoptionsedit['imagecontaineralignment'] = array(
                     'label' => new lang_string('setimagecontaineralignment', 'format_trail'),
@@ -1040,11 +1115,14 @@ class format_trail extends format_base {
                     'help_component' => 'format_trail'
                 );
             } else {
-                $courseformatoptionsedit['hidesectiontitle'] = array('label' => get_config('format_trail', 'defaulthidesectiontitle'),
+                $courseformatoptionsedit['hidesectiontitle']
+                        = array('label' => get_config('format_trail', 'defaulthidesectiontitle'),
                     'element_type' => 'hidden');
-                $courseformatoptionsedit['sectiontitletraillengthmaxoption'] = array('label' => get_config('format_trail', 'defaultsectiontitletraillengthmaxoption'),
+                $courseformatoptionsedit['sectiontitletraillengthmaxoption']
+                        = array('label' => get_config('format_trail', 'defaultsectiontitletraillengthmaxoption'),
                     'element_type' => 'hidden');
-                $courseformatoptionsedit['sectiontitleboxposition'] = array('label' => get_config('format_trail', 'defaultsectiontitleboxposition'),
+                $courseformatoptionsedit['sectiontitleboxposition'] = array('label' => get_config('format_trail',
+                        'defaultsectiontitleboxposition'),
                     'element_type' => 'hidden');
                 $courseformatoptionsedit['sectiontitleboxinsideposition'] = array(
                     'label' => get_config('format_trail', 'defaultsectiontitleboxinsideposition'), 'element_type' => 'hidden');
@@ -1071,7 +1149,8 @@ class format_trail extends format_base {
                 $courseformatoptionsedit['sectiontitlesummarybackgroundcolour'] = array(
                     'label' => $defaults['defaultsectiontitlesummarybackgroundcolour'], 'element_type' => 'hidden');
                 $courseformatoptionsedit['sectiontitlesummarybackgroundopacity'] = array(
-                    'label' => get_config('format_trail', 'defaultsectiontitlesummarybackgroundopacity'), 'element_type' => 'hidden');
+                    'label' => get_config('format_trail', 'defaultsectiontitlesummarybackgroundopacity'),
+                    'element_type' => 'hidden');
             }
 
             $courseformatoptionsedit['newactivity'] = array(
@@ -1113,6 +1192,62 @@ class format_trail extends format_base {
                 )
             );
 
+            // Alterado por JOTA.
+            $courseformatoptionsedit['hidenavside'] = array(
+                'label' => new lang_string('hidenavside', 'format_trail'),
+                'help' => 'hidenavside',
+                'help_component' => 'format_trail',
+                'element_type' => 'select',
+                'element_attributes' => array(
+                    array(
+                        1 => new lang_string('no'), // No.
+                        2 => new lang_string('yes') // Yes.
+                    )
+                )
+            );
+            $courseformatoptionsedit['hidesectionlock'] = array(
+                'label' => new lang_string('sethidesectionlock', 'format_trail'),
+                'element_type' => 'select',
+                'element_attributes' => array(
+                    array(
+                        1 => new lang_string('none', 'format_trail'),
+                        2 => new lang_string('lock', 'format_trail'),
+                        3 => new lang_string('mini_lock', 'format_trail')
+                    )
+                ),
+                'help' => 'sethidesectionlock',
+                'help_component' => 'format_trail'
+            );
+            $courseformatoptionsedit['showbackground'] = array(
+                'label' => new lang_string('setshowbackground', 'format_trail'),
+                'element_type' => 'select',
+                'element_attributes' => array(
+                    array(
+                        1 => new lang_string('tipo_pista', 'format_trail'),
+                        5 => new lang_string('tipo_pista2', 'format_trail'),
+                        2 => new lang_string('tipo_rio', 'format_trail'),
+                        3 => new lang_string('tipo_quebra1', 'format_trail'),
+                        4 => new lang_string('tipo_quebra2', 'format_trail')
+                    )
+                ),
+                'help' => 'setshowbackground',
+                'help_component' => 'format_trail'
+            );
+            $courseformatoptionsedit['showcheckstar'] = array(
+                'label' => new lang_string('setshowcheckstar', 'format_trail'),
+                'element_type' => 'select',
+                'element_attributes' => array(
+                    array(
+                        1 => new lang_string('none', 'format_trail'),
+                        2 => new lang_string('check', 'format_trail'),
+                        3 => new lang_string('star', 'format_trail'),
+                        4 => new lang_string('like', 'format_trail')
+                    )
+                ),
+                'help' => 'setshowcheckstar',
+                'help_component' => 'format_trail'
+            );
+
             if (has_capability('format/trail:changeimagecontainernavigation', $context)) {
                 $courseformatoptionsedit['setsection0ownpagenotrailonesection'] = array(
                     'label' => new lang_string('setsection0ownpagenotrailonesection', 'format_trail'),
@@ -1128,7 +1263,7 @@ class format_trail extends format_base {
                 );
             } else {
                 $courseformatoptionsedit['setsection0ownpagenotrailonesection'] = array('label' => get_config(
-                    'format_trail', 'defaultsection0ownpagenotrailonesection'), 'element_type' => 'hidden');
+                            'format_trail', 'defaultsection0ownpagenotrailonesection'), 'element_type' => 'hidden');
             }
 
             $courseformatoptions = array_merge_recursive($courseformatoptions, $courseformatoptionsedit);
@@ -1136,51 +1271,69 @@ class format_trail extends format_base {
         return $courseformatoptions;
     }
 
+    /**
+     * Gets colours defaults.
+     * @return string.
+     */
     protected function get_course_format_colour_defaults() {
         $defaults = array();
         $defaults['defaultbordercolour'] = get_config('format_trail', 'defaultbordercolour');
         if ($defaults['defaultbordercolour'][0] == '#') {
             $defaults['defaultbordercolour'] = substr($defaults['defaultbordercolour'], 1);
         }
-        $defaults['defaultimagecontainerbackgroundcolour'] = get_config('format_trail', 'defaultimagecontainerbackgroundcolour');
+        $defaults['defaultimagecontainerbackgroundcolour']
+                = get_config('format_trail', 'defaultimagecontainerbackgroundcolour');
         if ($defaults['defaultimagecontainerbackgroundcolour'][0] == '#') {
-            $defaults['defaultimagecontainerbackgroundcolour'] = substr($defaults['defaultimagecontainerbackgroundcolour'], 1);
+            $defaults['defaultimagecontainerbackgroundcolour']
+                    = substr($defaults['defaultimagecontainerbackgroundcolour'], 1);
         }
-        $defaults['defaultcurrentselectedsectioncolour'] = get_config('format_trail', 'defaultcurrentselectedsectioncolour');
+        $defaults['defaultcurrentselectedsectioncolour']
+                = get_config('format_trail', 'defaultcurrentselectedsectioncolour');
         if ($defaults['defaultcurrentselectedsectioncolour'][0] == '#') {
-            $defaults['defaultcurrentselectedsectioncolour'] = substr($defaults['defaultcurrentselectedsectioncolour'], 1);
+            $defaults['defaultcurrentselectedsectioncolour']
+                    = substr($defaults['defaultcurrentselectedsectioncolour'], 1);
         }
-        $defaults['defaultcurrentselectedimagecontainertextcolour'] = get_config('format_trail', 'defaultcurrentselectedimagecontainertextcolour');
+        $defaults['defaultcurrentselectedimagecontainertextcolour']
+                = get_config('format_trail', 'defaultcurrentselectedimagecontainertextcolour');
         if ($defaults['defaultcurrentselectedimagecontainertextcolour'][0] == '#') {
-            $defaults['defaultcurrentselectedimagecontainertextcolour'] = substr($defaults['defaultcurrentselectedimagecontainertextcolour'], 1);
+            $defaults['defaultcurrentselectedimagecontainertextcolour']
+                    = substr($defaults['defaultcurrentselectedimagecontainertextcolour'], 1);
         }
-        $defaults['defaultcurrentselectedimagecontainercolour'] = get_config('format_trail', 'defaultcurrentselectedimagecontainercolour');
+        $defaults['defaultcurrentselectedimagecontainercolour']
+                = get_config('format_trail', 'defaultcurrentselectedimagecontainercolour');
         if ($defaults['defaultcurrentselectedimagecontainercolour'][0] == '#') {
-            $defaults['defaultcurrentselectedimagecontainercolour'] = substr($defaults['defaultcurrentselectedimagecontainercolour'], 1);
+            $defaults['defaultcurrentselectedimagecontainercolour']
+                    = substr($defaults['defaultcurrentselectedimagecontainercolour'], 1);
         }
-        $defaults['defaultsectiontitleinsidetitletextcolour'] = get_config('format_trail', 'defaultsectiontitleinsidetitletextcolour');
+        $defaults['defaultsectiontitleinsidetitletextcolour']
+                = get_config('format_trail', 'defaultsectiontitleinsidetitletextcolour');
         if ($defaults['defaultsectiontitleinsidetitletextcolour'][0] == '#') {
-            $defaults['defaultsectiontitleinsidetitletextcolour'] = substr($defaults['defaultsectiontitleinsidetitletextcolour'], 1);
+            $defaults['defaultsectiontitleinsidetitletextcolour']
+                    = substr($defaults['defaultsectiontitleinsidetitletextcolour'], 1);
         }
-        $defaults['defaultsectiontitleinsidetitlebackgroundcolour'] = get_config('format_trail', 'defaultsectiontitleinsidetitlebackgroundcolour');
+        $defaults['defaultsectiontitleinsidetitlebackgroundcolour']
+                = get_config('format_trail', 'defaultsectiontitleinsidetitlebackgroundcolour');
         if ($defaults['defaultsectiontitleinsidetitlebackgroundcolour'][0] == '#') {
-            $defaults['defaultsectiontitleinsidetitlebackgroundcolour'] = substr($defaults['defaultsectiontitleinsidetitlebackgroundcolour'], 1);
+            $defaults['defaultsectiontitleinsidetitlebackgroundcolour']
+                    = substr($defaults['defaultsectiontitleinsidetitlebackgroundcolour'], 1);
         }
-        $defaults['defaultsectiontitlesummarytextcolour'] = get_config('format_trail', 'defaultsectiontitlesummarytextcolour');
+        $defaults['defaultsectiontitlesummarytextcolour']
+                = get_config('format_trail', 'defaultsectiontitlesummarytextcolour');
         if ($defaults['defaultsectiontitlesummarytextcolour'][0] == '#') {
-            $defaults['defaultsectiontitlesummarytextcolour'] = substr($defaults['defaultsectiontitlesummarytextcolour'], 1);
+            $defaults['defaultsectiontitlesummarytextcolour']
+                    = substr($defaults['defaultsectiontitlesummarytextcolour'], 1);
         }
-        $defaults['defaultsectiontitlesummarybackgroundcolour'] = get_config('format_trail', 'defaultsectiontitlesummarybackgroundcolour');
+        $defaults['defaultsectiontitlesummarybackgroundcolour']
+                = get_config('format_trail', 'defaultsectiontitlesummarybackgroundcolour');
         if ($defaults['defaultsectiontitlesummarybackgroundcolour'][0] == '#') {
-            $defaults['defaultsectiontitlesummarybackgroundcolour'] = substr($defaults['defaultsectiontitlesummarybackgroundcolour'], 1);
+            $defaults['defaultsectiontitlesummarybackgroundcolour']
+                    = substr($defaults['defaultsectiontitlesummarybackgroundcolour'], 1);
         }
         return $defaults;
     }
 
     /**
      * Adds format options elements to the course/section edit form.
-     *
-     * This function is called from {@link course_edit_form::definition_after_data()}.
      *
      * @param MoodleQuickForm $mform form the elements are added to.
      * @param bool $forsection 'true' if this is a section edit form, 'false' if this is course edit form.
@@ -1189,15 +1342,15 @@ class format_trail extends format_base {
     public function create_edit_form_elements(&$mform, $forsection = false) {
         global $CFG, $OUTPUT, $PAGE, $USER;
         MoodleQuickForm::registerElementType('gfcolourpopup', "$CFG->dirroot/course/format/trail/js/gf_colourpopup.php",
-                'MoodleQuickForm_gfcolourpopup');
+                'moodlequickform_gfcolourpopup');
 
         $elements = parent::create_edit_form_elements($mform, $forsection);
 
         /* Increase the number of sections combo box values if the user has increased the number of sections
-           using the icon on the course page beyond course 'maxsections' or course 'maxsections' has been
-           reduced below the number of sections already set for the course on the site administration course
-           defaults page.  This is so that the number of sections is not reduced leaving unintended orphaned
-           activities / resources. */
+          using the icon on the course page beyond course 'maxsections' or course 'maxsections' has been
+          reduced below the number of sections already set for the course on the site administration course
+          defaults page.  This is so that the number of sections is not reduced leaving unintended orphaned
+          activities / resources. */
         if (!$forsection) {
             $maxsections = get_config('moodlecourse', 'maxsections');
             $numsections = $mform->getElementValue('numsections');
@@ -1236,20 +1389,21 @@ class format_trail extends format_base {
         $resetelements = array();
 
         if (($changeimagecontaineralignment) ||
-            ($changeimagecontainernavigation) ||
-            ($changeimagecontainersize) ||
-            ($changeimageresizemethod) ||
-            ($changeimagecontainerstyle) ||
-            ($changesectiontitleoptions)) {
+                ($changeimagecontainernavigation) ||
+                ($changeimagecontainersize) ||
+                ($changeimageresizemethod) ||
+                ($changeimagecontainerstyle) ||
+                ($changesectiontitleoptions)) {
 
             if ($changeimagecontaineralignment) {
                 if ($bsfour) {
                     $checkboxname = get_string('resetimagecontaineralignment', 'format_trail');
                     $resetelements[] = & $mform->createElement('checkbox', 'resetimagecontaineralignment', '', $checkboxname);
-                    $resetelements[] = & $mform->createElement('html', $OUTPUT->help_icon('resetimagecontaineralignment', 'format_trail'));
+                    $resetelements[] = & $mform->createElement('html',
+                            $OUTPUT->help_icon('resetimagecontaineralignment', 'format_trail'));
                 } else {
-                    $checkboxname = get_string('resetimagecontaineralignment', 'format_trail').
-                        $OUTPUT->help_icon('resetimagecontaineralignment', 'format_trail');
+                    $checkboxname = get_string('resetimagecontaineralignment', 'format_trail') .
+                            $OUTPUT->help_icon('resetimagecontaineralignment', 'format_trail');
                     $resetelements[] = & $mform->createElement('checkbox', 'resetimagecontaineralignment', '', $checkboxname);
                 }
             }
@@ -1258,10 +1412,11 @@ class format_trail extends format_base {
                 if ($bsfour) {
                     $checkboxname = get_string('resetimagecontainernavigation', 'format_trail');
                     $resetelements[] = & $mform->createElement('checkbox', 'resetimagecontainernavigation', '', $checkboxname);
-                    $resetelements[] = & $mform->createElement('html', $OUTPUT->help_icon('resetimagecontainernavigation', 'format_trail'));
+                    $resetelements[] = & $mform->createElement('html',
+                            $OUTPUT->help_icon('resetimagecontainernavigation', 'format_trail'));
                 } else {
-                    $checkboxname = get_string('resetimagecontainernavigation', 'format_trail').
-                        $OUTPUT->help_icon('resetimagecontainernavigation', 'format_trail');
+                    $checkboxname = get_string('resetimagecontainernavigation', 'format_trail') .
+                            $OUTPUT->help_icon('resetimagecontainernavigation', 'format_trail');
                     $resetelements[] = & $mform->createElement('checkbox', 'resetimagecontainernavigation', '', $checkboxname);
                 }
             }
@@ -1270,10 +1425,11 @@ class format_trail extends format_base {
                 if ($bsfour) {
                     $checkboxname = get_string('resetimagecontainersize', 'format_trail');
                     $resetelements[] = & $mform->createElement('checkbox', 'resetimagecontainersize', '', $checkboxname);
-                    $resetelements[] = & $mform->createElement('html', $OUTPUT->help_icon('resetimagecontainersize', 'format_trail'));
+                    $resetelements[] = & $mform->createElement('html',
+                            $OUTPUT->help_icon('resetimagecontainersize', 'format_trail'));
                 } else {
-                    $checkboxname = get_string('resetimagecontainersize', 'format_trail').
-                        $OUTPUT->help_icon('resetimagecontainersize', 'format_trail');
+                    $checkboxname = get_string('resetimagecontainersize', 'format_trail') .
+                            $OUTPUT->help_icon('resetimagecontainersize', 'format_trail');
                     $resetelements[] = & $mform->createElement('checkbox', 'resetimagecontainersize', '', $checkboxname);
                 }
             }
@@ -1282,10 +1438,11 @@ class format_trail extends format_base {
                 if ($bsfour) {
                     $checkboxname = get_string('resetimageresizemethod', 'format_trail');
                     $resetelements[] = & $mform->createElement('checkbox', 'resetimageresizemethod', '', $checkboxname);
-                    $resetelements[] = & $mform->createElement('html', $OUTPUT->help_icon('resetimageresizemethod', 'format_trail'));
+                    $resetelements[] = & $mform->createElement('html',
+                            $OUTPUT->help_icon('resetimageresizemethod', 'format_trail'));
                 } else {
-                    $checkboxname = get_string('resetimageresizemethod', 'format_trail').
-                        $OUTPUT->help_icon('resetimageresizemethod', 'format_trail');
+                    $checkboxname = get_string('resetimageresizemethod', 'format_trail') .
+                            $OUTPUT->help_icon('resetimageresizemethod', 'format_trail');
                     $resetelements[] = & $mform->createElement('checkbox', 'resetimageresizemethod', '', $checkboxname);
                 }
             }
@@ -1294,10 +1451,11 @@ class format_trail extends format_base {
                 if ($bsfour) {
                     $checkboxname = get_string('resetimagecontainerstyle', 'format_trail');
                     $resetelements[] = & $mform->createElement('checkbox', 'resetimagecontainerstyle', '', $checkboxname);
-                    $resetelements[] = & $mform->createElement('html', $OUTPUT->help_icon('resetimagecontainerstyle', 'format_trail'));
+                    $resetelements[] = & $mform->createElement('html',
+                            $OUTPUT->help_icon('resetimagecontainerstyle', 'format_trail'));
                 } else {
-                    $checkboxname = get_string('resetimagecontainerstyle', 'format_trail').
-                        $OUTPUT->help_icon('resetimagecontainerstyle', 'format_trail');
+                    $checkboxname = get_string('resetimagecontainerstyle', 'format_trail') .
+                            $OUTPUT->help_icon('resetimagecontainerstyle', 'format_trail');
                     $resetelements[] = & $mform->createElement('checkbox', 'resetimagecontainerstyle', '', $checkboxname);
                 }
             }
@@ -1306,10 +1464,11 @@ class format_trail extends format_base {
                 if ($bsfour) {
                     $checkboxname = get_string('resetsectiontitleoptions', 'format_trail');
                     $resetelements[] = & $mform->createElement('checkbox', 'resetsectiontitleoptions', '', $checkboxname);
-                    $resetelements[] = & $mform->createElement('html', $OUTPUT->help_icon('resetsectiontitleoptions', 'format_trail'));
+                    $resetelements[] = & $mform->createElement('html',
+                            $OUTPUT->help_icon('resetsectiontitleoptions', 'format_trail'));
                 } else {
-                    $checkboxname = get_string('resetsectiontitleoptions', 'format_trail').
-                        $OUTPUT->help_icon('resetsectiontitleoptions', 'format_trail');
+                    $checkboxname = get_string('resetsectiontitleoptions', 'format_trail') .
+                            $OUTPUT->help_icon('resetsectiontitleoptions', 'format_trail');
                     $resetelements[] = & $mform->createElement('checkbox', 'resetsectiontitleoptions', '', $checkboxname);
                 }
             }
@@ -1324,12 +1483,12 @@ class format_trail extends format_base {
             $resetelements[] = & $mform->createElement('checkbox', 'resetfitpopup', '', $checkboxname);
             $resetelements[] = & $mform->createElement('html', $OUTPUT->help_icon('resetfitpopup', 'format_trail'));
         } else {
-            $checkboxname = get_string('resetnewactivity', 'format_trail').
-                $OUTPUT->help_icon('resetnewactivity', 'format_trail');
+            $checkboxname = get_string('resetnewactivity', 'format_trail') .
+                    $OUTPUT->help_icon('resetnewactivity', 'format_trail');
             $resetelements[] = & $mform->createElement('checkbox', 'resetnewactivity', '', $checkboxname);
 
-            $checkboxname = get_string('resetfitpopup', 'format_trail').
-                $OUTPUT->help_icon('resetfitpopup', 'format_trail');
+            $checkboxname = get_string('resetfitpopup', 'format_trail') .
+                    $OUTPUT->help_icon('resetfitpopup', 'format_trail');
             $resetelements[] = & $mform->createElement('checkbox', 'resepopup', '', $checkboxname);
         }
         $elements[] = $mform->addGroup($resetelements, 'resetgroup', get_string('resetgrp', 'format_trail'), null, false);
@@ -1340,71 +1499,79 @@ class format_trail extends format_base {
             if ($bsfour) {
                 $checkboxname = get_string('resetallimagecontaineralignment', 'format_trail');
                 $resetallelements[] = & $mform->createElement('checkbox', 'resetallimagecontaineralignment', '', $checkboxname);
-                $resetallelements[] = & $mform->createElement('html', $OUTPUT->help_icon('resetallimagecontaineralignment', 'format_trail'));
+                $resetallelements[] = & $mform->createElement('html',
+                        $OUTPUT->help_icon('resetallimagecontaineralignment', 'format_trail'));
 
                 $checkboxname = get_string('resetallimagecontainernavigation', 'format_trail');
                 $resetallelements[] = & $mform->createElement('checkbox', 'resetallimagecontainernavigation', '', $checkboxname);
-                $resetallelements[] = & $mform->createElement('html', $OUTPUT->help_icon('resetallimagecontainernavigation', 'format_trail'));
+                $resetallelements[] = & $mform->createElement('html',
+                        $OUTPUT->help_icon('resetallimagecontainernavigation', 'format_trail'));
 
                 $checkboxname = get_string('resetallimagecontainersize', 'format_trail');
                 $resetallelements[] = & $mform->createElement('checkbox', 'resetallimagecontainersize', '', $checkboxname);
-                $resetallelements[] = & $mform->createElement('html', $OUTPUT->help_icon('resetallimagecontainersize', 'format_trail'));
+                $resetallelements[] = & $mform->createElement('html',
+                        $OUTPUT->help_icon('resetallimagecontainersize', 'format_trail'));
 
                 $checkboxname = get_string('resetallimageresizemethod', 'format_trail');
                 $resetallelements[] = & $mform->createElement('checkbox', 'resetallimageresizemethod', '', $checkboxname);
-                $resetallelements[] = & $mform->createElement('html', $OUTPUT->help_icon('resetallimageresizemethod', 'format_trail'));
+                $resetallelements[] = & $mform->createElement('html',
+                        $OUTPUT->help_icon('resetallimageresizemethod', 'format_trail'));
 
                 $checkboxname = get_string('resetallimagecontainerstyle', 'format_trail');
                 $resetallelements[] = & $mform->createElement('checkbox', 'resetallimagecontainerstyle', '', $checkboxname);
-                $resetallelements[] = & $mform->createElement('html', $OUTPUT->help_icon('resetallimagecontainerstyle', 'format_trail'));
+                $resetallelements[] = & $mform->createElement('html',
+                        $OUTPUT->help_icon('resetallimagecontainerstyle', 'format_trail'));
 
                 $checkboxname = get_string('resetallsectiontitleoptions', 'format_trail');
                 $resetallelements[] = & $mform->createElement('checkbox', 'resetallsectiontitleoptions', '', $checkboxname);
-                $resetallelements[] = & $mform->createElement('html', $OUTPUT->help_icon('resetallsectiontitleoptions', 'format_trail'));
+                $resetallelements[] = & $mform->createElement('html',
+                        $OUTPUT->help_icon('resetallsectiontitleoptions', 'format_trail'));
 
                 $checkboxname = get_string('resetallnewactivity', 'format_trail');
                 $resetallelements[] = & $mform->createElement('checkbox', 'resetallnewactivity', '', $checkboxname);
-                $resetallelements[] = & $mform->createElement('html', $OUTPUT->help_icon('resetallnewactivity', 'format_trail'));
+                $resetallelements[] = & $mform->createElement('html',
+                        $OUTPUT->help_icon('resetallnewactivity', 'format_trail'));
 
                 $checkboxname = get_string('resetallfitpopup', 'format_trail');
                 $resetallelements[] = & $mform->createElement('checkbox', 'resetallfitpopup', '', $checkboxname);
-                $resetallelements[] = & $mform->createElement('html', $OUTPUT->help_icon('resetallfitpopup', 'format_trail'));
+                $resetallelements[] = & $mform->createElement('html',
+                        $OUTPUT->help_icon('resetallfitpopup', 'format_trail'));
             } else {
-                $checkboxname = get_string('resetallimagecontaineralignment', 'format_trail').
-                    $OUTPUT->help_icon('resetallimagecontaineralignment', 'format_trail');
+                $checkboxname = get_string('resetallimagecontaineralignment', 'format_trail') .
+                        $OUTPUT->help_icon('resetallimagecontaineralignment', 'format_trail');
                 $resetallelements[] = & $mform->createElement('checkbox', 'resetallimagecontaineralignment', '', $checkboxname);
 
-                $checkboxname = get_string('resetallimagecontainernavigation', 'format_trail').
-                    $OUTPUT->help_icon('resetallimagecontainernavigation', 'format_trail');
+                $checkboxname = get_string('resetallimagecontainernavigation', 'format_trail') .
+                        $OUTPUT->help_icon('resetallimagecontainernavigation', 'format_trail');
                 $resetallelements[] = & $mform->createElement('checkbox', 'resetallimagecontainernavigation', '', $checkboxname);
 
-                $checkboxname = get_string('resetallimagecontainersize', 'format_trail').
-                    $OUTPUT->help_icon('resetallimagecontainersize', 'format_trail');
+                $checkboxname = get_string('resetallimagecontainersize', 'format_trail') .
+                        $OUTPUT->help_icon('resetallimagecontainersize', 'format_trail');
                 $resetallelements[] = & $mform->createElement('checkbox', 'resetallimagecontainersize', '', $checkboxname);
 
-                $checkboxname = get_string('resetallimageresizemethod', 'format_trail').
-                    $OUTPUT->help_icon('resetallimageresizemethod', 'format_trail');
+                $checkboxname = get_string('resetallimageresizemethod', 'format_trail') .
+                        $OUTPUT->help_icon('resetallimageresizemethod', 'format_trail');
                 $resetallelements[] = & $mform->createElement('checkbox', 'resetallimageresizemethod', '', $checkboxname);
 
-                $checkboxname = get_string('resetallimagecontainerstyle', 'format_trail').
-                    $OUTPUT->help_icon('resetallimagecontainerstyle', 'format_trail');
+                $checkboxname = get_string('resetallimagecontainerstyle', 'format_trail') .
+                        $OUTPUT->help_icon('resetallimagecontainerstyle', 'format_trail');
                 $resetallelements[] = & $mform->createElement('checkbox', 'resetallimagecontainerstyle', '', $checkboxname);
 
-                $checkboxname = get_string('resetallsectiontitleoptions', 'format_trail').
-                    $OUTPUT->help_icon('resetallsectiontitleoptions', 'format_trail');
+                $checkboxname = get_string('resetallsectiontitleoptions', 'format_trail') .
+                        $OUTPUT->help_icon('resetallsectiontitleoptions', 'format_trail');
                 $resetallelements[] = & $mform->createElement('checkbox', 'resetallsectiontitleoptions', '', $checkboxname);
 
-                $checkboxname = get_string('resetallnewactivity', 'format_trail').
-                    $OUTPUT->help_icon('resetallnewactivity', 'format_trail');
+                $checkboxname = get_string('resetallnewactivity', 'format_trail') .
+                        $OUTPUT->help_icon('resetallnewactivity', 'format_trail');
                 $resetallelements[] = & $mform->createElement('checkbox', 'resetallnewactivity', '', $checkboxname);
 
-                $checkboxname = get_string('resetallfitpopup', 'format_trail').
-                    $OUTPUT->help_icon('resetallfitpopup', 'format_trail');
+                $checkboxname = get_string('resetallfitpopup', 'format_trail') .
+                        $OUTPUT->help_icon('resetallfitpopup', 'format_trail');
                 $resetallelements[] = & $mform->createElement('checkbox', 'resetallfitpopup', '', $checkboxname);
             }
 
-            $elements[] = $mform->addGroup($resetallelements, 'resetallgroup', get_string('resetallgrp', 'format_trail'), null,
-                false);
+            $elements[] = $mform->addGroup($resetallelements, 'resetallgroup',
+                    get_string('resetallgrp', 'format_trail'), null, false);
         }
 
         return $elements;
@@ -1516,7 +1683,7 @@ class format_trail extends format_base {
             return false;
         }
     }
-    
+
     /**
      * Updates format options for a course
      *
@@ -1524,10 +1691,9 @@ class format_trail extends format_base {
      * 'coursedisplay', 'numsections' and 'hiddensections' from the previous format.
      * The layout and colour defaults will come from 'course_format_options'.
      *
-     * @param stdClass|array $data return value from {@link moodleform::get_data()} or array with data.
-     * @param stdClass $oldcourse if this function is called from {@link update_course()}
-     *     this object contains information about the course before update.
-     * @return bool whether there were any changes to the options values.
+     * @param array $data
+     * @param stdClass $oldcourse
+     * @return boolean whether there were any changes to the options values.
      */
     public function update_course_format_options($data, $oldcourse = null) {
         global $DB; // MDL-37976.
@@ -1553,6 +1719,7 @@ class format_trail extends format_base {
         $resetallnewactivity = false;
         $resetallfitpopup = false;
         $resetgreyouthidden = false;
+        $resethidenavside = false;
         if (isset($data->resetimagecontaineralignment) == true) {
             $resetimagecontaineralignment = true;
             unset($data->resetimagecontaineralignment);
@@ -1621,6 +1788,10 @@ class format_trail extends format_base {
             $resetgreyouthidden = true;
             unset($data->resetgreyouthidden);
         }
+        if (isset($data->resethidenavside) == true) {
+            $resethidenavside = true;
+            unset($data->resethidenavside);
+        }
 
         $settings = $this->get_settings();
         $changedisplayedimages = false;
@@ -1628,7 +1799,7 @@ class format_trail extends format_base {
             // We are have the CONTRIB-4099 options and this is not from a pre-CONTRIB-4099 backup file.
             if (((!(($resetimagecontainersize) || ($resetallimagecontainersize))) &&
                     (($settings['imagecontainerwidth'] != $data->imagecontainerwidth) ||
-                     ($settings['imagecontainerratio'] != $data->imagecontainerratio))) ||
+                    ($settings['imagecontainerratio'] != $data->imagecontainerratio))) ||
                     ((!(($resetimageresizemethod) || ($resetallimageresizemethod))) &&
                     ($settings['imageresizemethod'] != $data->imageresizemethod))) {
                 /* Detect now and action later as 'setup_displayed_image' when called from 'update_displayed_images()' will need to
@@ -1649,11 +1820,11 @@ class format_trail extends format_base {
                     } else if ($key === 'numsections') {
                         // If previous format does not have the field 'numsections'
                         // and $data['numsections'] is not set,
-                        // we fill it with the maximum section number from the DB
+                        // we fill it with the maximum section number from the DB.
                         $maxsection = $DB->get_field_sql('SELECT max(section) from {course_sections}
                             WHERE course = ?', array($this->courseid));
                         if ($maxsection) {
-                            // If there are no sections, or just default 0-section, 'numsections' will be set to default
+                            // If there are no sections, or just default 0-section, 'numsections' will be set to default.
                             $data['numsections'] = $maxsection;
                         }
                     }
@@ -1664,7 +1835,7 @@ class format_trail extends format_base {
 
         if ($changes && array_key_exists('numsections', $data)) {
             // If the numsections was decreased, try to completely delete the orphaned sections (unless they are not empty).
-            $numsections = (int)$data['numsections'];
+            $numsections = (int) $data['numsections'];
             $maxsection = $DB->get_field_sql('SELECT max(section) from {course_sections}
                         WHERE course = ?', array($this->courseid));
             for ($sectionnum = $maxsection; $sectionnum > $numsections; $sectionnum--) {
@@ -1684,28 +1855,28 @@ class format_trail extends format_base {
 
         // Now we can do the reset.
         if (($resetallimagecontaineralignment) ||
-            ($resetallimagecontainernavigation) ||
-            ($resetallimagecontainersize) ||
-            ($resetallimageresizemethod) ||
-            ($resetallimagecontainerstyle) ||
-            ($resetallsectiontitleoptions) ||
-            ($resetallnewactivity) ||
-            ($resetallfitpopup)) {
+                ($resetallimagecontainernavigation) ||
+                ($resetallimagecontainersize) ||
+                ($resetallimageresizemethod) ||
+                ($resetallimagecontainerstyle) ||
+                ($resetallsectiontitleoptions) ||
+                ($resetallnewactivity) ||
+                ($resetallfitpopup)) {
             $this->reset_trail_setting(0, $resetallimagecontaineralignment, $resetallimagecontainernavigation,
-                $resetallimagecontainersize, $resetallimageresizemethod, $resetallimagecontainerstyle,
-                $resetallsectiontitleoptions, $resetallnewactivity, $resetallfitpopup);
+                    $resetallimagecontainersize, $resetallimageresizemethod, $resetallimagecontainerstyle,
+                    $resetallsectiontitleoptions, $resetallnewactivity, $resetallfitpopup);
             $changes = true;
         } else if (
-            ($resetimagecontaineralignment) ||
-            ($resetimagecontainersize) ||
-            ($resetimageresizemethod) ||
-            ($resetimagecontainerstyle) ||
-            ($resetsectiontitleoptions) ||
-            ($resetnewactivity) ||
-            ($resetfitpopup)) {
-            $this->reset_trail_setting($this->courseid, $resetimagecontaineralignment, $resetimagecontainernavigation,
-                $resetimagecontainersize, $resetimageresizemethod, $resetimagecontainerstyle,
-                $resetsectiontitleoptions, $resetnewactivity, $resetfitpopup);
+                ($resetimagecontaineralignment) ||
+                ($resetimagecontainersize) ||
+                ($resetimageresizemethod) ||
+                ($resetimagecontainerstyle) ||
+                ($resetsectiontitleoptions) ||
+                ($resetnewactivity) ||
+                ($resetfitpopup)) {
+            $this->reset_trail_setting($this->courseid, $resetimagecontaineralignment,
+                    $resetimagecontainernavigation, $resetimagecontainersize, $resetimageresizemethod,
+                    $resetimagecontainerstyle, $resetsectiontitleoptions, $resetnewactivity, $resetfitpopup);
             $changes = true;
         }
 
@@ -1715,7 +1886,7 @@ class format_trail extends format_base {
     /**
      * Deletes a section
      *
-     * Do not call this function directly, instead call {@link course_delete_section()}
+     * Do not call this function directly, instead call
      *
      * @param int|stdClass|section_info $section
      * @param bool $forcedeleteifnotempty if set to false section will not be deleted if it has modules in it.
@@ -1728,8 +1899,8 @@ class format_trail extends format_base {
         }
         if (!is_object($section)) {
             global $DB;
-            $section = $DB->get_record('course_sections', array('course' => $this->get_courseid(), 'section' => $section),
-                'id,section,sequence,summary');
+            $section = $DB->get_record('course_sections', array('course' => $this->get_courseid(),
+                'section' => $section), 'id,section,sequence,summary');
         }
         if (!$section || !$section->section) {
             // Not possible to delete 0-section.
@@ -1749,10 +1920,10 @@ class format_trail extends format_base {
     /**
      * Whether this format allows to delete sections
      *
-     * Do not call this function directly, instead use {@link course_can_delete_section()}
+     * Do not call this function directly
      *
      * @param int|stdClass|section_info $section
-     * @return bool
+     * @return boolean
      */
     public function can_delete_section($section) {
         return true;
@@ -1764,8 +1935,8 @@ class format_trail extends format_base {
      * Section id is expected in $data->id (or $data['id'])
      * If $data does not contain property with the option name, the option will not be updated
      *
-     * @param stdClass|array $data return value from {@link moodleform::get_data()} or array with data
-     * @return bool whether there were any changes to the options values
+     * @param array $data
+     * @return boolean whether there were any changes to the options values
      */
     public function update_section_format_options($data) {
         $data = (array) $data;
@@ -1790,9 +1961,9 @@ class format_trail extends format_base {
      * @param int $newactivityreset If true, reset the new activity to the default in the settings for the format.
      * @param int $fitpopupreset If true, reset the fit popup to the default in the settings for the format.
      */
-    public function reset_trail_setting($courseid, $imagecontaineralignmentreset, $imagecontainernavigationreset,
-        $imagecontainersizereset, $imageresizemethodreset, $imagecontainerstylereset, $sectiontitleoptionsreset,
-        $newactivityreset, $fitpopupreset) {
+    public function reset_trail_setting($courseid, $imagecontaineralignmentreset,
+            $imagecontainernavigationreset, $imagecontainersizereset, $imageresizemethodreset,
+            $imagecontainerstylereset, $sectiontitleoptionsreset, $newactivityreset, $fitpopupreset) {
         global $DB, $USER;
 
         $context = $this->get_context();
@@ -1814,52 +1985,70 @@ class format_trail extends format_base {
         $updatesectiontitleoptions = false;
         $updatenewactivity = false;
         $updatefitpopup = false;
-        if ($imagecontaineralignmentreset && has_capability('format/trail:changeimagecontaineralignment', $context) && $resetallifall) {
+        if ($imagecontaineralignmentreset && has_capability('format/trail:changeimagecontaineralignment', $context)
+                && $resetallifall) {
             $updatedata['imagecontaineralignment'] = get_config('format_trail', 'defaultimagecontaineralignment');
             $updateimagecontaineralignment = true;
         }
-        if ($imagecontainernavigationreset && has_capability('format/trail:changeimagecontaineralignment', $context) && $resetallifall) {
-            $updatedata['setsection0ownpagenotrailonesection'] = get_config('format_trail', 'defaultsection0ownpagenotrailonesection');
+        if ($imagecontainernavigationreset && has_capability('format/trail:changeimagecontaineralignment', $context)
+                && $resetallifall) {
+            $updatedata['setsection0ownpagenotrailonesection'] = get_config('format_trail',
+                    'defaultsection0ownpagenotrailonesection');
             $updateimagecontainernavigation = true;
         }
-        if ($imagecontainersizereset && has_capability('format/trail:changeimagecontainersize', $context) && $resetallifall) {
+        if ($imagecontainersizereset && has_capability('format/trail:changeimagecontainersize', $context)
+                && $resetallifall) {
             $updatedata['imagecontainerwidth'] = get_config('format_trail', 'defaultimagecontainerwidth');
             $updatedata['imagecontainerratio'] = get_config('format_trail', 'defaultimagecontainerratio');
             $updateimagecontainersize = true;
         }
-        if ($imageresizemethodreset && has_capability('format/trail:changeimageresizemethod', $context) && $resetallifall) {
+        if ($imageresizemethodreset && has_capability('format/trail:changeimageresizemethod', $context)
+                && $resetallifall) {
             $updatedata['imageresizemethod'] = get_config('format_trail', 'defaultimageresizemethod');
             $updateimageresizemethod = true;
         }
-        if ($imagecontainerstylereset && has_capability('format/trail:changeimagecontainerstyle', $context) && $resetallifall) {
+        if ($imagecontainerstylereset && has_capability('format/trail:changeimagecontainerstyle', $context)
+                && $resetallifall) {
             $updatedata['bordercolour'] = get_config('format_trail', 'defaultbordercolour');
             $updatedata['borderwidth'] = get_config('format_trail', 'defaultborderwidth');
             $updatedata['borderradius'] = get_config('format_trail', 'defaultborderradius');
-            $updatedata['imagecontainerbackgroundcolour'] = get_config('format_trail', 'defaultimagecontainerbackgroundcolour');
-            $updatedata['currentselectedsectioncolour'] = get_config('format_trail', 'defaultcurrentselectedsectioncolour');
+            $updatedata['imagecontainerbackgroundcolour'] = get_config('format_trail',
+                    'defaultimagecontainerbackgroundcolour');
+            $updatedata['currentselectedsectioncolour'] = get_config('format_trail',
+                    'defaultcurrentselectedsectioncolour');
             $updatedata['currentselectedimagecontainertextcolour'] = get_config('format_trail',
                     'defaultcurrentselectedimagecontainertextcolour');
             $updatedata['currentselectedimagecontainercolour'] = get_config('format_trail',
                     'defaultcurrentselectedimagecontainercolour');
             $updateimagecontainerstyle = true;
         }
-        if ($sectiontitleoptionsreset && has_capability('format/trail:changesectiontitleoptions', $context) && $resetallifall) {
+        if ($sectiontitleoptionsreset && has_capability('format/trail:changesectiontitleoptions', $context)
+                && $resetallifall) {
             $updatedata['hidesectiontitle'] = get_config('format_trail', 'defaulthidesectiontitle');
-            $updatedata['sectiontitletraillengthmaxoption'] = get_config('format_trail', 'defaultsectiontitletraillengthmaxoption');
+            $updatedata['sectiontitletraillengthmaxoption'] = get_config('format_trail',
+                    'defaultsectiontitletraillengthmaxoption');
             $updatedata['sectiontitleboxposition'] = get_config('format_trail', 'defaultsectiontitleboxposition');
-            $updatedata['sectiontitleboxinsideposition'] = get_config('format_trail', 'defaultsectiontitleboxinsideposition');
+            $updatedata['sectiontitleboxinsideposition'] = get_config('format_trail',
+                    'defaultsectiontitleboxinsideposition');
             $updatedata['sectiontitleboxheight'] = get_config('format_trail', 'defaultsectiontitleboxheight');
             $updatedata['sectiontitleboxopacity'] = get_config('format_trail', 'defaultsectiontitleboxopacity');
             $updatedata['sectiontitlefontsize'] = get_config('format_trail', 'defaultsectiontitlefontsize');
             $updatedata['sectiontitlealignment'] = get_config('format_trail', 'defaultsectiontitlealignment');
-            $updatedata['sectiontitleinsidetitletextcolour'] = get_config('format_trail', 'defaultsectiontitleinsidetitletextcolour');
-            $updatedata['sectiontitleinsidetitlebackgroundcolour'] = get_config('format_trail', 'defaultsectiontitleinsidetitlebackgroundcolour');
+            $updatedata['sectiontitleinsidetitletextcolour'] = get_config('format_trail',
+                    'defaultsectiontitleinsidetitletextcolour');
+            $updatedata['sectiontitleinsidetitlebackgroundcolour'] = get_config('format_trail',
+                    'defaultsectiontitleinsidetitlebackgroundcolour');
             $updatedata['showsectiontitlesummary'] = get_config('format_trail', 'defaultshowsectiontitlesummary');
-            $updatedata['setshowsectiontitlesummaryposition'] = get_config('format_trail', 'defaultsetshowsectiontitlesummaryposition');
-            $updatedata['sectiontitlesummarymaxlength'] = get_config('format_trail', 'defaultsectiontitlesummarymaxlength');
-            $updatedata['sectiontitlesummarytextcolour'] = get_config('format_trail', 'defaultsectiontitlesummarytextcolour');
-            $updatedata['sectiontitlesummarybackgroundcolour'] = get_config('format_trail', 'defaultsectiontitlesummarybackgroundcolour');
-            $updatedata['sectiontitlesummarybackgroundopacity'] = get_config('format_trail', 'defaultsectiontitlesummarybackgroundopacity');
+            $updatedata['setshowsectiontitlesummaryposition'] = get_config('format_trail',
+                    'defaultsetshowsectiontitlesummaryposition');
+            $updatedata['sectiontitlesummarymaxlength'] = get_config('format_trail',
+                    'defaultsectiontitlesummarymaxlength');
+            $updatedata['sectiontitlesummarytextcolour'] = get_config('format_trail',
+                    'defaultsectiontitlesummarytextcolour');
+            $updatedata['sectiontitlesummarybackgroundcolour'] = get_config('format_trail',
+                    'defaultsectiontitlesummarybackgroundcolour');
+            $updatedata['sectiontitlesummarybackgroundopacity'] = get_config('format_trail',
+                    'defaultsectiontitlesummarybackgroundopacity');
             $updatesectiontitleoptions = true;
         }
         if ($newactivityreset && $resetallifall) {
@@ -1873,13 +2062,13 @@ class format_trail extends format_base {
 
         foreach ($records as $record) {
             if (($updateimagecontaineralignment) ||
-                ($updateimagecontainernavigation) ||
-                ($updateimagecontainersize) ||
-                ($updateimageresizemethod) ||
-                ($updateimagecontainerstyle) ||
-                ($updatesectiontitleoptions) ||
-                ($updatenewactivity) ||
-                ($updatefitpopup)) {
+                    ($updateimagecontainernavigation) ||
+                    ($updateimagecontainersize) ||
+                    ($updateimageresizemethod) ||
+                    ($updateimagecontainerstyle) ||
+                    ($updatesectiontitleoptions) ||
+                    ($updatenewactivity) ||
+                    ($updatefitpopup)) {
                 $ourcourseid = $this->courseid;
                 $this->courseid = $record->id;
                 if (($updateimagecontainersize) || ($updateimageresizemethod)) {
@@ -1937,8 +2126,9 @@ class format_trail extends format_base {
 
     /**
      * Gets the trail image entries for the given course.
-     * @param int $courseid The course id to use.
-     * @returns bool|array The records or false if the course id is 0 or the request failed.
+     *
+     * @param int $courseid
+     * @return booelan
      */
     public function get_images($courseid) {
         global $DB;
@@ -1947,8 +2137,8 @@ class format_trail extends format_base {
             return false;
         }
 
-        if (!$sectionimagecontainers = $DB->get_records('format_trail_icon', array('courseid' => $courseid), '',
-                'sectionid, image, displayedimageindex')) {
+        if (!$sectionimagecontainers = $DB->get_records('format_trail_icon',
+                array('courseid' => $courseid), '', 'sectionid, image, displayedimageindex')) {
             $sectionimagecontainers = false;
         }
         return $sectionimagecontainers;
@@ -1960,7 +2150,7 @@ class format_trail extends format_base {
      * will be accurate.
      * @param int $courseid The course id to use.
      * @param int $sectionid The section id to use.
-     * @returns bool|array The record or false if the course id is 0 or section id is 0 or the request failed.
+     * @return booelan
      */
     public function get_image($courseid, $sectionid) {
         global $DB;
@@ -1977,8 +2167,8 @@ class format_trail extends format_base {
             $newimagecontainer->displayedimageindex = 0;
 
             if (!$newimagecontainer->id = $DB->insert_record('format_trail_icon', $newimagecontainer, true)) {
-                throw new moodle_exception('invalidrecordid', 'format_trail', '',
-                'Could not create image container.  Trail format database is not ready.' .
+                throw new moodle_exception('invalidrecordid', 'format_trail', '', 'Could not create image container.'
+                . '  Trail format database is not ready.' .
                 '  An admin must visit the notifications section.');
             }
             $sectionimage = $newimagecontainer;
@@ -2008,7 +2198,8 @@ class format_trail extends format_base {
 
             if (!$newstatus->id = $DB->insert_record('format_trail_summary', $newstatus)) {
                 throw new moodle_exception('invalidrecordid', 'format_trail', '',
-                'Could not set summary status. Trail format database is not ready. An admin must visit the notifications section.');
+                        'Could not set summary status. Trail format database is not ready.'
+                . ' An admin must visit the notifications section.');
             }
             $summarystatus = $newstatus;
 
@@ -2070,21 +2261,22 @@ class format_trail extends format_base {
      * @return array with the key => value of 'height' and 'width' for the container.
      */
     private function get_displayed_image_container_properties($settings) {
-        return array('height' => $this->calculate_height($settings['imagecontainerwidth'], $settings['imagecontainerratio']),
+        return array('height' => $this->calculate_height($settings['imagecontainerwidth'],
+                $settings['imagecontainerratio']),
             'width' => $settings['imagecontainerwidth']);
     }
 
     /**
      * Calculates height given the width and ratio.
-     * @param int $width.
-     * @param int $ratio.
-     * @return int Height.
+     *
+     * @param int $width
+     * @param int $ratio
+     * @return int
      */
     private function calculate_height($width, $ratio) {
         $basewidth = $width;
 
         switch ($ratio) {
-            // Ratios 1 => '3-2', 2 => '3-1', 3 => '3-3', 4 => '2-3', 5 => '1-3', 6 => '4-3', 7 => '3-4'.
             case 1: // 3-2.
             case 2: // 3-1.
             case 3: // 3-3.
@@ -2104,7 +2296,6 @@ class format_trail extends format_base {
 
         $height = $basewidth;
         switch ($ratio) {
-            // Ratios 1 => '3-2', 2 => '3-1', 3 => '3-3', 4 => '2-3', 5 => '1-3', 6 => '4-3', 7 => '3-4'.
             case 2: // 3-1.
                 $height = $basewidth;
                 break;
@@ -2125,6 +2316,14 @@ class format_trail extends format_base {
         return round($height);
     }
 
+    /**
+     * Create original image.
+     *
+     * @param int $contextid
+     * @param int $sectionid
+     * @param string $filename
+     * @return array
+     */
     public function create_original_image_record($contextid, $sectionid, $filename) {
         $created = time();
         $storedfilerecord = array(
@@ -2134,13 +2333,21 @@ class format_trail extends format_base {
             'itemid' => $sectionid,
             'filepath' => '/',
             // CONTRIB-5001 - Avoid clashes with the same image in the section summary by using a different name.
-            'filename' => 'goi_' . $filename, // goi = tla = trail original image.
+            'filename' => 'goi_' . $filename, // Goi = tla = trail original image.
             'timecreated' => $created,
             'timemodified' => $created);
 
         return $storedfilerecord;
     }
 
+    /**
+     * Create section image.
+     *
+     * @param string $tempfile
+     * @param string $storedfilerecord
+     * @param string $sectionimage
+     * @return none.
+     */
     public function create_section_image($tempfile, $storedfilerecord, $sectionimage) {
         global $DB, $CFG;
         require_once($CFG->libdir . '/gdlib.php');
@@ -2183,14 +2390,16 @@ class format_trail extends format_base {
 
             if ($convertsuccess == true) {
                 $DB->set_field('format_trail_icon', 'image', $storedfilerecord['filename'],
-                    array('sectionid' => $storedfilerecord['itemid']));
+                        array('sectionid' => $storedfilerecord['itemid']));
 
                 // Set up the displayed image:...
                 $sectionimage->newimage = $storedfilerecord['filename'];
                 $icbc = self::hex2rgb($this->get_settings()['imagecontainerbackgroundcolour']);
-                $this->setup_displayed_image($sectionimage, $storedfilerecord['contextid'], $this->get_settings(), $icbc, $mime);
+                $this->setup_displayed_image($sectionimage, $storedfilerecord['contextid'],
+                        $this->get_settings(), $icbc, $mime);
             } else {
-                print_error('imagecannotbeused', 'format_trail', $CFG->wwwroot . "/course/view.php?id=" . $this->courseid);
+                throw new moodle_exception('imagecannotbeused', 'format_trail', $CFG->wwwroot . "/course/view.php?id="
+                        . $this->courseid);
             }
         } catch (Exception $e) {
             if (isset($tempfile)) {
@@ -2218,8 +2427,8 @@ class format_trail extends format_base {
 
         // Set up the displayed image:...
         $fs = get_file_storage();
-        if ($imagecontainerpathfile = $fs->get_file($contextid, 'course', 'section', $sectionimage->sectionid, '/',
-                $sectionimage->newimage)) {
+        if ($imagecontainerpathfile = $fs->get_file($contextid, 'course', 'section',
+                $sectionimage->sectionid, '/', $sectionimage->newimage)) {
             $trailimagepath = $this->get_image_path();
             $convertsuccess = true;
             if (!$mime) {
@@ -2237,7 +2446,8 @@ class format_trail extends format_base {
             } else {
                 $crop = true;
             }
-            $data = self::generate_image($tmpfilepath, $displayedimageinfo['width'], $displayedimageinfo['height'], $crop, $icbc, $mime);
+            $data = self::generate_image($tmpfilepath, $displayedimageinfo['width'],
+                    $displayedimageinfo['height'], $crop, $icbc, $mime);
             if (!empty($data)) {
                 // Updated image.
                 $sectionimage->displayedimageindex++;
@@ -2253,17 +2463,19 @@ class format_trail extends format_base {
                     'timemodified' => $created,
                     'mimetype' => $mime);
 
-                if ($fs->file_exists($displayedimagefilerecord['contextid'], $displayedimagefilerecord['component'],
-                    $displayedimagefilerecord['filearea'], $displayedimagefilerecord['itemid'],
-                    $displayedimagefilerecord['filepath'], $displayedimagefilerecord['filename'])) {
+                if ($fs->file_exists($displayedimagefilerecord['contextid'],
+                        $displayedimagefilerecord['component'], $displayedimagefilerecord['filearea'],
+                        $displayedimagefilerecord['itemid'], $displayedimagefilerecord['filepath'],
+                        $displayedimagefilerecord['filename'])) {
                     /* This can happen with previous CONTRIB-4099 versions where it was possible for the backup file to
-                       have the 'trailimage' files too.  Therefore without this, then 'create_file_from_string' below will
-                       baulk as the file already exists.   Unfortunately has to be here as the restore mechanism restores
-                       the trail format data for the database and then the files.  And the Trail code is called at the 'data'
-                       stage. */
-                    if ($oldfile = $fs->get_file($displayedimagefilerecord['contextid'], $displayedimagefilerecord['component'],
-                        $displayedimagefilerecord['filearea'], $displayedimagefilerecord['itemid'],
-                        $displayedimagefilerecord['filepath'], $displayedimagefilerecord['filename'])) {
+                      have the 'trailimage' files too.  Therefore without this, then 'create_file_from_string' below will
+                      baulk as the file already exists.   Unfortunately has to be here as the restore mechanism restores
+                      the trail format data for the database and then the files.  And the Trail code is called at the 'data'
+                      stage. */
+                    if ($oldfile = $fs->get_file($displayedimagefilerecord['contextid'],
+                            $displayedimagefilerecord['component'], $displayedimagefilerecord['filearea'],
+                            $displayedimagefilerecord['itemid'], $displayedimagefilerecord['filepath'],
+                            $displayedimagefilerecord['filename'])) {
                         // Delete old file.
                         $oldfile->delete();
                     }
@@ -2276,15 +2488,15 @@ class format_trail extends format_base {
 
             if ($convertsuccess == true) {
                 // Now safe to delete old file if it exists.
-                if ($oldfile = $fs->get_file($contextid, 'course', 'section', $sectionimage->sectionid, $trailimagepath,
-                        ($sectionimage->displayedimageindex - 1) . '_' . $sectionimage->image)) {
+                if ($oldfile = $fs->get_file($contextid, 'course', 'section', $sectionimage->sectionid,
+                        $trailimagepath, ($sectionimage->displayedimageindex - 1) . '_' . $sectionimage->image)) {
                     $oldfile->delete();
                 }
-                $DB->set_field('format_trail_icon', 'displayedimageindex', $sectionimage->displayedimageindex,
-                    array('sectionid' => $sectionimage->sectionid));
+                $DB->set_field('format_trail_icon', 'displayedimageindex',
+                        $sectionimage->displayedimageindex, array('sectionid' => $sectionimage->sectionid));
             } else {
-                print_error('cannotconvertuploadedimagetodisplayedimage', 'format_trail',
-                        $CFG->wwwroot . "/course/view.php?id=" . $this->courseid);
+                throw new moodle_exception('cannotconvertuploadedimagetodisplayedimage',
+                        'format_trail', $CFG->wwwroot . "/course/view.php?id=" . $this->courseid);
             }
         } else {
             $DB->set_field('format_trail_icon', 'image', null, array('sectionid' => $sectionimage->sectionid));
@@ -2293,30 +2505,59 @@ class format_trail extends format_base {
         return $sectionimage;  // So that the caller can know the new value of displayedimageindex.
     }
 
-    public function output_section_image($section, $sectionname, $sectionimage, $contextid, $thissection, $trailimagepath, $output) {
+    // Alterado por Jota.
+    /**
+     * Output section image.
+     * @param array $section
+     * @param string $sectionname
+     * @param string $sectionimage
+     * @param int $contextid
+     * @param \sdtClass $thissection
+     * @param string $trailimagepath
+     * @param string $output
+     * @param int $bloqueado
+     * @return array The updated $sectionimage data.
+     */
+    public function output_section_image($section, $sectionname, $sectionimage,
+            $contextid, $thissection, $trailimagepath, $output, $bloqueado = 0) {
+        global $CFG;
         $content = '';
         if (is_object($sectionimage) && ($sectionimage->displayedimageindex > 0)) {
             $imgurl = moodle_url::make_pluginfile_url(
-                $contextid, 'course', 'section', $thissection->id, $trailimagepath,
-                $sectionimage->displayedimageindex . '_' . $sectionimage->image
-            );
+                            $contextid, 'course', 'section', $thissection->id,
+                    $trailimagepath, $sectionimage->displayedimageindex . '_' . $sectionimage->image);
+            // Alterado por Jota.
+            if ($bloqueado > 0) {
+                $imgurl = $CFG->wwwroot . '/course/format/trail/pix/lock.png';
+            }
             $content = html_writer::empty_tag('img', array(
-                'src' => $imgurl,
-                'alt' => $sectionname,
-                'role' => 'img',
-                'aria-label' => $sectionname));
+                        'src' => $imgurl,
+                        'alt' => $sectionname,
+                        'role' => 'img',
+                        'aria-label' => $sectionname));
         } else if ($section == 0) {
             $imgurl = $output->image_url('info', 'format_trail');
+            // Alterado por Jota.
+            if ($bloqueado > 0) {
+                $imgurl = $CFG->wwwroot . '/course/format/trail/pix/lock.png';
+            }
             $content = html_writer::empty_tag('img', array(
-                'src' => $imgurl,
-                'alt' => $sectionname,
-                'class' => 'info',
-                'role' => 'img',
-                'aria-label' => $sectionname));
+                        'src' => $imgurl,
+                        'alt' => $sectionname,
+                        'class' => 'info',
+                        'role' => 'img',
+                        'aria-label' => $sectionname));
         }
         return $content;
     }
 
+    /**
+     * Delete image.
+     *
+     * @param int $sectionid
+     * @param int $contextid
+     * @return none.
+     */
     public function delete_image($sectionid, $contextid) {
         $sectionimage = $this->get_image($this->courseid, $sectionid);
         if ($sectionimage) {
@@ -2330,8 +2571,8 @@ class format_trail extends format_base {
                     $DB->set_field('format_trail_icon', 'image', null, array('sectionid' => $sectionimage->sectionid));
                     // Delete the displayed image.
                     $trailimagepath = $this->get_image_path();
-                    if ($file = $fs->get_file($contextid, 'course', 'section', $sectionid, $trailimagepath,
-                            $sectionimage->displayedimageindex . '_' . $sectionimage->image)) {
+                    if ($file = $fs->get_file($contextid, 'course', 'section', $sectionid,
+                            $trailimagepath, $sectionimage->displayedimageindex . '_' . $sectionimage->image)) {
                         $file->delete();
                     }
                 }
@@ -2341,6 +2582,11 @@ class format_trail extends format_base {
         }
     }
 
+    /**
+     * Delete images.
+     *
+     * @return none.
+     */
     public function delete_images() {
         $sectionimages = $this->get_images($this->courseid);
 
@@ -2353,12 +2599,13 @@ class format_trail extends format_base {
             foreach ($sectionimages as $sectionimage) {
                 // Delete the image if there is one.
                 if (!empty($sectionimage->image)) {
-                    if ($file = $fs->get_file($context->id, 'course', 'section', $sectionimage->sectionid, '/',
-                            $sectionimage->image)) {
+                    if ($file = $fs->get_file($context->id, 'course', 'section',
+                            $sectionimage->sectionid, '/', $sectionimage->image)) {
                         $file->delete();
                         // Delete the displayed image.
-                        if ($file = $fs->get_file($context->id, 'course', 'section', $sectionimage->sectionid, $trailimagepath,
-                                $sectionimage->displayedimageindex . '_' . $sectionimage->image)) {
+                        if ($file = $fs->get_file($context->id, 'course', 'section',
+                                $sectionimage->sectionid, $trailimagepath, $sectionimage->displayedimageindex
+                                . '_' . $sectionimage->image)) {
                             $file->delete();
                         }
                     }
@@ -2368,6 +2615,11 @@ class format_trail extends format_base {
         }
     }
 
+    /**
+     * Delete displayed images.
+     *
+     * @return none.
+     */
     public function delete_displayed_images() {
         $sectionimages = $this->get_images($this->courseid);
 
@@ -2381,10 +2633,12 @@ class format_trail extends format_base {
 
             foreach ($sectionimages as $sectionimage) {
                 // Delete the displayed image.
-                if ($file = $fs->get_file($context->id, 'course', 'section', $sectionimage->sectionid, $trailimagepath,
-                        $sectionimage->displayedimageindex . '_' . $sectionimage->image)) {
+                if ($file = $fs->get_file($context->id, 'course', 'section',
+                        $sectionimage->sectionid, $trailimagepath, $sectionimage->displayedimageindex
+                        . '_' . $sectionimage->image)) {
                     $file->delete();
-                    $DB->set_field('format_trail_icon', 'displayedimageindex', 0, array('sectionid' => $sectionimage->sectionid));
+                    $DB->set_field('format_trail_icon', 'displayedimageindex', 0,
+                            array('sectionid' => $sectionimage->sectionid));
                 }
             }
             $t->allow_commit();
@@ -2415,7 +2669,8 @@ class format_trail extends format_base {
             }
             $t->allow_commit();
         } else if (!$ignorenorecords) { // Only report error if it's ok not to have records.
-            print_error('cannotgetimagesforcourse', 'format_trail', '', null, "update_displayed_images - Course id: " . $courseid);
+            throw new moodle_exception('cannotgetimagesforcourse', 'format_trail', '', null,
+                    "update_displayed_images - Course id: " . $courseid);
         }
     }
 
@@ -2461,8 +2716,8 @@ class format_trail extends format_base {
                     $filters = PNG_NO_FILTER;
                     $quality = 1;
                 } else {
-                    debugging('PNG\'s are not supported at this server, please fix the system configuration'.
-                        ' to have the GD PHP extension installed.');
+                    debugging('PNG\'s are not supported at this server, please fix the system configuration' .
+                            ' to have the GD PHP extension installed.');
                     return false;
                 }
                 break;
@@ -2472,8 +2727,8 @@ class format_trail extends format_base {
                     $filters = null;
                     $quality = 90;
                 } else {
-                    debugging('JPG\'s are not supported at this server, please fix the system configuration'.
-                        ' to have the GD PHP extension installed.');
+                    debugging('JPG\'s are not supported at this server, please fix the system configuration' .
+                            ' to have the GD PHP extension installed.');
                     return false;
                 }
                 break;
@@ -2483,13 +2738,13 @@ class format_trail extends format_base {
                     $filters = null;
                     $quality = null;
                 } else {
-                    debugging('GIF\'s are not supported at this server, please fix the system configuration'.
-                        ' to have the GD PHP extension installed.');
+                    debugging('GIF\'s are not supported at this server, please fix the system configuration' .
+                            ' to have the GD PHP extension installed.');
                     return false;
                 }
                 break;
             default:
-                debugging('Mime type \''.$mime.'\' is not supported as an image format in the Trail format.');
+                debugging('Mime type \'' . $mime . '\' is not supported as an image format in the Trail format.');
                 return false;
         }
 
@@ -2585,8 +2840,8 @@ class format_trail extends format_base {
             $dstx = floor(($width - $targetwidth) / 2);
             $dsty = floor(($height - $targetheight) / 2);
 
-            imagecopybicubic($finalimage, $original, $dstx, $dsty, 0, 0, $targetwidth, $targetheight, $originalwidth,
-                $originalheight);
+            imagecopybicubic($finalimage, $original, $dstx, $dsty, 0, 0,
+                    $targetwidth, $targetheight, $originalwidth, $originalheight);
         }
 
         ob_start();
@@ -2643,8 +2898,8 @@ class format_trail extends format_base {
      * @param null|lang_string|string $editlabel
      * @return \core\output\inplace_editable
      */
-    public function inplace_editable_render_section_name($section, $linkifneeded = true, $editable = null, $edithint = null,
-            $editlabel = null) {
+    public function inplace_editable_render_section_name($section, $linkifneeded = true,
+            $editable = null, $edithint = null, $editlabel = null) {
         if (empty($edithint)) {
             $edithint = new lang_string('editsectionname', 'format_trail');
         }
@@ -2652,7 +2907,8 @@ class format_trail extends format_base {
             $title = $this->get_section_name($section);
             $editlabel = new lang_string('newsectionname', 'format_trail', $title);
         }
-        return parent::inplace_editable_render_section_name($section, $linkifneeded, $editable, $edithint, $editlabel);
+        return parent::inplace_editable_render_section_name($section, $linkifneeded,
+                $editable, $edithint, $editlabel);
     }
 
     /**
@@ -2677,6 +2933,14 @@ class format_trail extends format_base {
         return !$section->section || ($section->visible && $section->section <= $this->get_course()->numsections);
     }
 
+    /**
+     * Action section.
+     *
+     * @param \stdClass $section
+     * @param string $action
+     * @param string $sr
+     * @return string
+     */
     public function section_action($section, $action, $sr) {
         global $PAGE;
 
@@ -2694,6 +2958,11 @@ class format_trail extends format_base {
         return $rv;
     }
 
+    /**
+     * Get context.
+     *
+     * @return \sdtClass
+     */
     private function get_context() {
         global $SITE;
 
@@ -2705,6 +2974,7 @@ class format_trail extends format_base {
             return context_course::instance($this->courseid);
         }
     }
+
 }
 
 /**
@@ -2721,9 +2991,11 @@ function format_trail_inplace_editable($itemtype, $itemid, $newvalue) {
     if ($itemtype === 'sectionname' || $itemtype === 'sectionnamenl') {
         global $DB;
         $section = $DB->get_record_sql(
-                'SELECT s.* FROM {course_sections} s JOIN {course} c ON s.course = c.id WHERE s.id = ? AND c.format = ?',
-                array($itemid, 'trail'), MUST_EXIST);
-        return course_get_format($section->course)->inplace_editable_update_section_name($section, $itemtype, $newvalue);
+                'SELECT s.* FROM {course_sections} s'
+                . ' JOIN {course} c ON s.course = c.id'
+                . ' WHERE s.id = ? AND c.format = ?', array($itemid, 'trail'), MUST_EXIST);
+        return course_get_format($section->course)->inplace_editable_update_section_name($section,
+                $itemtype, $newvalue);
     }
 }
 
@@ -2739,11 +3011,10 @@ function callback_trail_uses_sections() {
 /**
  * Used to display the course structure for a course where format=trail
  *
- * This is called automatically by {@link load_course()} if the current course
- * format = weeks.
  *
- * @param array $path An array of keys to the course node in the navigation
- * @param stdClass $modinfo The mod info object for the current course
+ * @param array $navigation
+ * @param \stdClass $course
+ * @param \stdClass $coursenode
  * @return bool Returns true
  */
 function callback_trail_load_content(&$navigation, $course, $coursenode) {

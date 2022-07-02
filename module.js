@@ -16,16 +16,16 @@
 /**
  * Trail Format - A topics based format that uses a trail of user selectable images to popup a light box of the section.
  *
- * @package    course/format
- * @subpackage trail
- * @version    See the value of '$plugin->version' in version.php.
- * @copyright  &copy; 2012 onwards G J Barnard in respect to modifications of standard topics format.
+ * @package    format_trail
+ * @copyright  &copy; 2019 Jose Wilson  in respect to modifications of grid format.
+ * @author     &copy; 2013 G J Barnard in respect to modifications of standard topics format.
  * @author     G J Barnard - {@link http://about.me/gjbarnard} and
  *                           {@link http://moodle.org/user/profile.php?id=442195}
  * @author     Based on code originally written by Paul Krix and Julian Ridden.
  * @license    http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
+/* eslint-disable camelcase */
 /**
  * @namespace
  */
@@ -43,7 +43,7 @@ M.format_trail = M.format_trail || {
     // Integer - current selected section number or '-1' if unknown.
     selected_section_no: -1,
     /* Array - Index is section number (Integer) and value is either '1' for not section not shown or '2' for shown
-       helps to work out the next / previous section in 'find_next_shown_section'. */
+     helps to work out the next / previous section in 'find_next_shown_section'. */
     shadebox_shown_array: null,
     // DOM reference to the #trailshadebox_content element.
     shadebox_content: null
@@ -61,7 +61,7 @@ M.format_trail = M.format_trail || {
  *                  index is the section no.
  */
 M.format_trail.init = function(Y, the_editing_on, the_section_redirect, the_num_sections, the_initial_section,
-    the_shadebox_shown_array) {
+        the_shadebox_shown_array) {
     "use strict";
     this.ourYUI = Y;
     this.editing_on = the_editing_on;
@@ -69,7 +69,7 @@ M.format_trail.init = function(Y, the_editing_on, the_section_redirect, the_num_
     this.selected_section = null;
     this.num_sections = parseInt(the_num_sections);
     this.shadebox_shown_array = the_shadebox_shown_array;
-    Y.use('json-parse', function (Y) {
+    Y.use('json-parse', function(Y) {
         M.format_trail.shadebox_shown_array = Y.JSON.parse(M.format_trail.shadebox_shown_array);
     });
 
@@ -77,7 +77,7 @@ M.format_trail.init = function(Y, the_editing_on, the_section_redirect, the_num_
         if (the_initial_section > -1) {
             M.format_trail.tab(the_initial_section);
         } else {
-            this.set_selected_section(this.num_sections, true, true);  // Section 0 can be in the trail.
+            this.set_selected_section(this.num_sections, true, true); // Section 0 can be in the trail.
         }
     } else {
         this.selected_section_no = -1;
@@ -148,6 +148,7 @@ M.format_trail.init = function(Y, the_editing_on, the_section_redirect, the_num_
 
 /**
  * Called when the user clicks on the trail icon, set up in the init() method.
+ * @param {object} e color
  */
 M.format_trail.icon_click = function(e) {
     "use strict";
@@ -163,7 +164,7 @@ M.format_trail.icon_click = function(e) {
  * Called when there is flat navigation and the nav drawer has been clicked.
  * @param {object} e Click event.
  * @return {boolean} Returns true if event is to be triggered normally or nothing otherwise as preventDefault will stop the
-                     default action of the event - https://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-flow-cancelation.
+ default action of the event - https://www.w3.org/TR/DOM-Level-2-Events/events.html#Events-flow-cancelation.
  */
 M.format_trail.navdrawerclick = function(e) {
     "use strict";
@@ -181,10 +182,12 @@ M.format_trail.navdrawerclick = function(e) {
         this.tab(idx);
         this.icon_toggle(e);
     }
+    return;
 };
 
 /**
  * Called when the user tabs and the item is a trail icon.
+ * @param {object} index Click event.
  */
 M.format_trail.tab = function(index) {
     "use strict";
@@ -193,7 +196,7 @@ M.format_trail.tab = function(index) {
     this.selected_section_no = index;
     this.update_selected_background(previous_no);
     if (M.format_trail.shadebox.shadebox_open === true) {
-         this.change_shown();
+        this.change_shown();
     }
 };
 
@@ -266,7 +269,7 @@ M.format_trail.change_selected_section = function(increase_section) {
 M.format_trail.change_shown = function() {
     "use strict";
     // Make the selected section visible, scroll to it and hide all other sections.
-    if(this.selected_section !== null) {
+    if (this.selected_section !== null) {
         this.selected_section.addClass('hide_section');
     }
     this.selected_section = this.ourYUI.one("#section-" + this.selected_section_no);
@@ -325,7 +328,7 @@ M.format_trail.find_next_shown_section = function(starting_point, increase_secti
     var current = starting_point;
     var next = starting_point;
 
-    while(found === false) {
+    while (found === false) {
         if (increase_section === true) {
             current++;
             if (current > this.num_sections) {
@@ -444,13 +447,14 @@ M.format_trail.shadebox.update_shadebox = function() {
  * Gets the page height.
  * Code from quirksmode.org.
  * Author unknown.
+ * @return {object} pageHeight
  */
 M.format_trail.shadebox.get_page_height = function() {
     "use strict";
     var yScroll;
-    if(window.innerHeight && window.scrollMaxY) {
+    if (window.innerHeight && window.scrollMaxY) {
         yScroll = window.innerHeight + window.scrollMaxY;
-    } else if(document.body.scrollHeight > document.body.offsetHeight) { // All but Explorer Mac.
+    } else if (document.body.scrollHeight > document.body.offsetHeight) { // All but Explorer Mac.
         yScroll = document.body.scrollHeight;
     } else { // Explorer Mac ... also works in Explorer 6 strict and safari.
         yScroll = document.body.offsetHeight;
@@ -458,21 +462,20 @@ M.format_trail.shadebox.get_page_height = function() {
 
     var windowHeight;
     // All except Explorer.
-    if(self.innerHeight) { // jshint ignore:line
+    if (self.innerHeight) { // jshint ignore:line
         windowHeight = self.innerHeight; // jshint ignore:line
-    } else if(document.documentElement && document.documentElement.clientHeight) { // Explorer 6 strict mode.
+    } else if (document.documentElement && document.documentElement.clientHeight) { // Explorer 6 strict mode.
         windowHeight = document.documentElement.clientHeight;
-    } else if(document.body) { // Other Explorers.
+    } else if (document.body) { // Other Explorers.
         windowHeight = document.body.clientHeight;
     }
 
     // For small pages with total height less than height of the viewport.
     var pageHeight;
-    if(yScroll < windowHeight) {
+    if (yScroll < windowHeight) {
         pageHeight = windowHeight;
     } else {
         pageHeight = yScroll;
     }
-
     return pageHeight;
 };

@@ -1,15 +1,17 @@
 Trail Course Format
 ============================
-A grid-based, topic-based course format that uses a track of user-selectable images to display a section lightbox.
+Trail format was developed based on the Grid format plugin. He distributes the grids on a trail. 
+Some features were designed to meet some aspects of gamification, being able to change the background style
+ and transparency for grids. In addition to having the responsibility for mobile equipment.
 
 
 Required version of Moodle
 ==========================
-This version works with Moodle 3.5 version 2018051700.00 (Build: 20180517) and above within the 3.5 branch until the
+This version works with Moodle 3.8 version 2019111704 (Build: 2019111704) and above within the 3.8 branch until the
 next release.
 
 Please ensure that your hardware and software complies with 'Requirements' in 'Installing Moodle' on
-'docs.moodle.org/35/en/Installing_Moodle'.
+'docs.moodle.org/38/en/Installing_Moodle'.
 
 Free Software
 =============
